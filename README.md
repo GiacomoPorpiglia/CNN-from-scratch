@@ -12,9 +12,9 @@ LeNet is made of:
   * a pooling layer, like the previous one (C4)  
   * a fully connected layer with 120 neurons (with 16x3x3=256 inputs, obtained by flattening the 16 outputs of C4)  
   * a fully connected layer with 84 neurons  
-  * a output layer with 10 outputs, one for each digit  
+  * an output layer with 10 outputs, one for each digit  
 
-    The activation function is sigmoid, and for the output layer is Softmax, paired with cross-entropy loss.
+The **activation function** is **sigmoid**, and for the output layer is **Softmax**, paired with **cross-entropy loss**.  
 
 The only difference with the original LeNet is the number of inputs for the FC layers: in fact, since the size of each image was originally 32x32, the flattened output of C4 had size=16x5x5=400. No other changes were made from the original model.
 
