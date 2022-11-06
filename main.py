@@ -122,7 +122,7 @@ def main():
         batch_size = 10000
         while True:
             images_test_set, labels_test_set = selectImagesAndLabels(batch_size, testImages, testLabels)
-            test(network, image_size, images_test_set, labels_test_set, 'test', learnRate)
+            test(network, image_size, images_test_set, labels_test_set, 'test')
             print("Accuracy:", network.testRightAnswers/(batch_size) *100, "%")
             print(network.testRightAnswers, network.testWrongAnswers)
             network.testRightAnswers = network.testWrongAnswers = 0
