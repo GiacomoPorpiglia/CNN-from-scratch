@@ -6,13 +6,13 @@ So, to give you the general idea of what this project is, it is a convolutional 
 The model I used is LeNet-5, a very popular model for this problem ([this is a great article](https://www.analyticsvidhya.com/blog/2021/03/the-architecture-of-lenet-5/) if you want to learn more), with some small tweaks I'll explain later on.
 <br />
 LeNet is made of:  
-    * a convolution layer with 6 kernels (C1)  
-    * a pooling layer (I used the mean pool, but I read that max pool gives, for this dataset, very similar results) (C2)  
-    * a convolution layer with 16 kernels (the input of each kernel are different combinations of the 6 outputs of the previous layer) (C3)  
-    * a pooling layer, like the previous one (C4)  
-    * a fully connected layer with 120 neurons (with 16x3x3=256 inputs, obtained by flattening the 16 outputs of C4)  
-    * a fully connected layer with 84 neurons  
-    * a output layer with 10 outputs, one for each digit  
+  * a convolution layer with 6 kernels (C1)  
+  * a pooling layer (I used the mean pool, but I read that max pool gives, for this dataset, very similar results) (C2)  
+  * a convolution layer with 16 kernels (the input of each kernel are different combinations of the 6 outputs of the previous layer) (C3)  
+  * a pooling layer, like the previous one (C4)  
+  * a fully connected layer with 120 neurons (with 16x3x3=256 inputs, obtained by flattening the 16 outputs of C4)  
+  * a fully connected layer with 84 neurons  
+  * a output layer with 10 outputs, one for each digit  
 
     The activation function is sigmoid, and for the output layer is Softmax, paired with cross-entropy loss.
 
