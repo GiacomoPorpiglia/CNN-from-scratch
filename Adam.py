@@ -10,7 +10,7 @@ class Adam:
         self.m_k, self.v_k = 0, 0
     
     def optimizeFC(self, wGradients, bGradients, learnRate, t):
-
+    
         self.m_w = self.beta_1 * self.m_w + (1-self.beta_1) * wGradients
         self.v_w = self.beta_2 * self.v_w + (1-self.beta_2) * wGradients**2
 
