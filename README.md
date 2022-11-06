@@ -1,12 +1,10 @@
 # Convolutional Neural Network for Image Classification From Scratch (Only NumPy and SciPy)
 
-Hello everyone! Thank you for clicking on this project, I appreciate it!
-This project wasn't easy at all, and there are a few reasons for that:
-    1- It's my first neural-network-related project!
-    2- Since it was my first approach to this argument, I didn't want to fast-forward and using libraries(PyTorch, TensorFlow, Keras, ecc...) straightaway, becaues I think that in roder to have a deep and full understanding of how something works, you have to do it the hard way, first.
+Hello everyone! The project's goal was to write a Neural Network from scratch, without the help of any libraries like PyTorch, Keras, TensorFlow ecc...
+But why bother, you may ask. The main reason is that, since it was my first approach to neural networks, I didn't want to fast-forward using libraries(PyTorch, TensorFlow, Keras, ecc...) straightaway, becaues I think that in roder to have a deep and full understanding of how something works, you have to do it the hard way, first.
 
-So, to give you the general idea of what this project is, it is a convolutional neural network for the classification of the MNIST hand-written digits dataset (Of course, with some small changes, it can be applied to many different datasets).
-The model I used is LeNet-5 (very popular, this is a great article if you want to learn more https://www.analyticsvidhya.com/blog/2021/03/the-architecture-of-lenet-5/), with some small tweaks I'll explain later on.
+So, to give you the general idea of what this project is, it is a convolutional neural network for the classification of the MNIST hand-written digits dataset (Of course, with some small changes, it can be used for classifying many different datasets).
+The model I used is LeNet-5, a very popular model for this problem ([this is a great article](https://www.analyticsvidhya.com/blog/2021/03/the-architecture-of-lenet-5/) if you want to learn more), with some small tweaks I'll explain later on.
 
 LeNet is made of:
     -a convolution layer with 6 kernels (C1)
