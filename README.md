@@ -1,4 +1,4 @@
-Convolutional Neural Network for Image Classification
+#Convolutional Neural Network for Image Classification From Scratch (Only NumPy and SciPy)
 
 Hello everyone! Thank you for clicking on this project, I appreciate it!
 This project wasn't easy at all, and there are a few reasons for that:
