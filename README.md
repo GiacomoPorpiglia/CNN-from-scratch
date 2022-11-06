@@ -6,7 +6,7 @@ So, to give you the general idea of what this project is, it is a convolutional 
 The model I used is LeNet-5, a very popular model for this problem ([this is a great article](https://www.analyticsvidhya.com/blog/2021/03/the-architecture-of-lenet-5/) if you want to learn more), with some small tweaks I'll explain later on.
 <br />
 LeNet is made of:
-    * a convolution layer with 6 kernels (C1)
+    * a convolution layer with 6 kernels (C1)  
     * a pooling layer (I used the mean pool, but I read that max pool gives, for this dataset, very similar results) (C2)
     * a convolution layer with 16 kernels (the input of each kernel are different combinations of the 6 outputs of the previous layer) (C3)
     * a pooling layer, like the previous one (C4)
