@@ -21,7 +21,7 @@ The only difference with the original LeNet is the number of inputs for the FC l
 For the optimization, I experimented multiple approaches:  
   * Gradient Descent, which has the downside of getting stuck very easily at local minima.  
   * Gradient Descent with Momentum, which helps avoiding local minima, but still has some problems in improving the model when it gets to around 95% accuracy. This is because the changes at that point of the training have to be small, and with momenutm is very tricky to get that. I tried lowering the learning rate as the training went on, but with small results.  
-The real game changer (at least for me), was **Adam optimization**: a widely popular optimizer, which combines momentum and RMSprop. More about it here https://optimization.cbe.cornell.edu/index.php?title=Adam
+  * The real game changer (at least for me), was **Adam optimization**: a widely popular optimizer, which combines momentum and RMSprop. More about it [here](https://optimization.cbe.cornell.edu/index.php?title=Adam)  
 
 Now let's talk about how I trained the model. Now, my goal wasn't just getting a very high accuracy on the dataset: I wanted the network to be able to generalize in order to be able to recognize REAL hand-written digits, that the user can write on a simple drawing canvas.
 Now, you may think that, if the model has a very high training accuracy, it will also generalize very well on any given image, but I found that wasn't the case.
