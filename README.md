@@ -39,8 +39,7 @@ The results I got are very interesting:
 All the data of the training are in 3 files located in the folder "saved_network_98.46%" (they are "trainData.txt", "testData.txt", and "costData.txt")
 As you may notice, the cost seems pretty high for such accuracy, but keep in mind the training was done on the distorted images: in fact, the accuracy on the training images during the training was only around 95%.
 
-
-How to use the program
+## How to use
 
 By running the main file, you can choose between several options:
     -train, if you want to train the model. Keep in mind that you have to specify the folder in which you want the model to be saved for future use.
