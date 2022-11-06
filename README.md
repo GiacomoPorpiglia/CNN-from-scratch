@@ -23,16 +23,18 @@ For the optimization, I experimented multiple approaches:
   * Gradient Descent with Momentum, which helps avoiding local minima, but still has some problems in improving the model when it gets to around 95% accuracy. This is because the changes at that point of the training have to be small, and with momenutm is very tricky to get that. I tried lowering the learning rate as the training went on, but with small results.  
   * The real game changer (at least for me), was **Adam optimization**: a widely popular optimizer, which combines momentum and RMSprop. More about it [here](https://optimization.cbe.cornell.edu/index.php?title=Adam)  
 
-Now let's talk about how I trained the model. Now, my goal wasn't just getting a very high accuracy on the dataset: I wanted the network to be able to generalize in order to be able to recognize REAL hand-written digits, that the user can write on a simple drawing canvas.
-Now, you may think that, if the model has a very high training accuracy, it will also generalize very well on any given image, but I found that wasn't the case.
-In fact I found out that every number in the dataset is centered and arranged in a specific way (so they fit in a 20x20 box in the center of the image). So, when I drew my own numbers, I often got wrong answers, despite the accuracy being > 97%.
-What I did to avoid this was distorcing the train images, giving them some randomness: I shifted them, zoomed them, rotated them and added some noise, to help convergence.
-The results I got are very interesting: 
-    -A 98.55% accuracy on the training data (undistorted), more exactly 59131 right, 869 wrong
-    -A 98.46% accuracy on the test data, 9846 right, 154 wrong.
-        -On this result, I also want to point out something very interesting. As you can read in the official MNIST dataset website http://yann.lecun.com/exdb/mnist/, the first 5000 images of the test dataset are supposed to be simpler than the last 5000.
-        Instead, I got a 97.82% accuracy on the "easy" ones, and a 99.1% accuracy on the hard ones!
-        I personally don't have an explanation on why is this, but if you have let me know!
+## Training
+
+Now let's talk about how I trained the model. Now, my goal wasn't just getting a very high accuracy on the dataset: I wanted the network to **be able to generalize** so that it could recognize efficiently REAL hand-written digits that the user can write on a simple drawing canvas.  
+Now, someone may think that, if the model has a very high training accuracy, it will also generalize very well on any given image, but I found that wasn't the case.
+In fact I experimented that every number in the dataset is centered and arranged in a specific way (so they fit in a 20x20 box in the center of the image). So, when I drew my own numbers, I often got wrong answers, despite the accuracy being > 97%.  <br />
+What I did to avoid this was **distorcing the train images**, giving them some randomness: I shifted them, zoomed them, and rotated them, to help convergence.
+The results I got are very interesting:  
+  - A **98.55% accuracy** on the training data (undistorted), more exactly 59131 right, 869 wrong
+  - A **98.46% accuracy** on the test data, 9846 right, 154 wrong.
+    - On this result, I also want to point out something very interesting. As you can read in the [official MNIST dataset website](http://yann.lecun.com/exdb/mnist/), the first 5000 images of the test dataset are supposed to be simpler than the last 5000.
+    Instead, I got a 97.82% accuracy on the "easy" ones, and a **99.1% accuracy** on the hard ones!
+    I personally don't have an explanation on why is this, but if you have let me know!
 
 All the data of the training are in 3 files located in the folder "saved_network_98.46%" (they are "trainData.txt", "testData.txt", and "costData.txt")
 As you may notice, the cost seems pretty high for such accuracy, but keep in mind the training was done on the distorted images: in fact, the accuracy on the training images during the training was only around 95%.
