@@ -10,13 +10,13 @@ class Adam:
         self.m_k, self.v_k = 0, 0
     
     def optimizeFC(self, wGradients, bGradients, learnRate, t):
+    
         self.m_w = self.beta_1 * self.m_w + (1-self.beta_1) * wGradients
         self.v_w = self.beta_2 * self.v_w + (1-self.beta_2) * wGradients**2
 
         self.m_b = self.beta_1 * self.m_b + (1-self.beta_1) * bGradients
         self.v_b = self.beta_2 * self.v_b + (1-self.beta_2) * bGradients**2
 
-        epsilon = 1e-8
         m_hat_w = (self.m_w) / (1-self.beta_1**t)
         v_hat_w = (self.v_w) / (1-self.beta_2**t)
         weightsChange = learnRate * (m_hat_w / (np.sqrt(v_hat_w) + self.epsilon))
