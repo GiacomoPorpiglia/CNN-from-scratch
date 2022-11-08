@@ -31,7 +31,7 @@ def calculaeteHiddenLayerNodeValuesJIT(oldLayerWeights, oldNodeValues, activatio
     return np.dot((oldLayerWeights), oldNodeValues) * activationDerivatives
 
 
-class Layer:
+class LayerDense:
     def __init__(self, n_inputs, n_neurons, activation):
         self.n_inputs = n_inputs
         self.n_neurons = n_neurons

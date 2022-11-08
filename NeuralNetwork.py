@@ -1,28 +1,34 @@
 import numpy as np
-from Layer import Layer
-from Convolutional import Convolutional
+from LayerDense import LayerDense
+from Conv2D import Conv2D
+from Pool2D import Pool2D
 import matplotlib.pyplot as plt
 from combinationMaps import *
 
 class NeuralNetwork:
 
-    layers = []
-    convLayers = []
     def __init__(self, layerSizes, convSizes, networkToLoadPath):
+
+        self.denseLayers = []
+        self.convLayers = []
+
         self.networkToLoadPath = networkToLoadPath
         self.layerSizes = layerSizes
         for idx in range(len(layerSizes)-1):
             if idx+1 == len(layerSizes)-1:
-                self.layers.append(Layer(layerSizes[idx], layerSizes[idx+1], "SOFTMAX"))
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SOFTMAX"))
             else:
-                self.layers.append(Layer(layerSizes[idx], layerSizes[idx+1], "SIGMOID"))
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SIGMOID"))
 
         self.convSizes = convSizes
 
         outputSize = 28-convSizes[0][1]+1
-        self.convLayers.append(Convolutional(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize))
+        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize))
+        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, "mean"))
+
         outputSize = int(outputSize/2 -convSizes[1][1] + 1)
-        self.convLayers.append(Convolutional(convSizes[1][0], convSizes[1][1], combinationMap1, "SIGMOID", outputSize))
+        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, "SIGMOID", outputSize))
+        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, "mean"))
 
         self.costSum = 0
         self.rightAnswers = 0
@@ -46,9 +52,9 @@ class NeuralNetwork:
         for convLayer in self.convLayers:
             finalOutput = convLayer.forward(finalOutput)
         
-        finalOutput = finalOutput.reshape(self.layers[0].n_inputs)
+        finalOutput = finalOutput.reshape(self.denseLayers[0].n_inputs)
 
-        for layer in self.layers:
+        for layer in self.denseLayers:
             finalOutput = layer.forward(finalOutput)
         return finalOutput
 
@@ -73,19 +79,19 @@ class NeuralNetwork:
             self.wrongAnswers+=1
               
         self.costSum += self.cost(outputs, expected_output)
-        outputLayer = self.layers[-1]
+        outputLayer = self.denseLayers[-1]
         nodeValues = outputLayer.calculateOutputLayerNodeValues(expected_output)
         
         outputLayer.updateGradients()
 
 
-        for hiddenLayer_idx in reversed(range(len(self.layers)-1)):
-            hiddenLayer = self.layers[hiddenLayer_idx]
-            nodeValues = hiddenLayer.calculateHiddenLayerNodeValues(self.layers[hiddenLayer_idx+1], nodeValues)
+        for hiddenLayer_idx in reversed(range(len(self.denseLayers)-1)):
+            hiddenLayer = self.denseLayers[hiddenLayer_idx]
+            nodeValues = hiddenLayer.calculateHiddenLayerNodeValues(self.denseLayers[hiddenLayer_idx+1], nodeValues)
             hiddenLayer.updateGradients()
 
         #CNN backpropagation
-        inputFCLayerNodeValues = np.dot((self.layers[0].weights), self.layers[0].nodeValues)
+        inputFCLayerNodeValues = np.dot((self.denseLayers[0].weights), self.denseLayers[0].nodeValues)
         nodeValues = self.convLayers[-1].updateGradients(inputFCLayerNodeValues)
         for idx in range(len(self.convLayers)-2, -1, -1):
             nodeValues = self.convLayers[idx].updateGradients(nodeValues)
@@ -98,13 +104,14 @@ class NeuralNetwork:
         #store and print the train accuracy and cost of the learning data to see if the network is improving     
         #-----------------Apply and reset the gradients--------------------
 
-        for layer in self.layers:
+        for layer in self.denseLayers:
             layer.applyGradients(learnRate)
             layer.resetGradients()
         
         for convLayer in self.convLayers:
-            convLayer.applyGradients(learnRate)
-            convLayer.resetGradients()
+            if isinstance(convLayer, Conv2D):
+                convLayer.applyGradients(learnRate)
+                convLayer.resetGradients()
 
 
     def test(self, data, expected_outputs):
@@ -129,32 +136,41 @@ class NeuralNetwork:
 
 
     def load(self):
-        for idx, layer in enumerate(self.layers):
+        for idx, layer in enumerate(self.denseLayers):
             try:
                 layer.weights = np.load(self.networkToLoadPath + '/ff_weights' + str(idx+1) + '.npy')
                 layer.biases = np.load(self.networkToLoadPath + '/ff_biases' + str(idx+1) + '.npy')
             except IOError:
                 pass
+
+        numOfPoolLayers = 0
         for idx, layer in enumerate(self.convLayers):
-            try:
-                layer.kernels = np.load(self.networkToLoadPath + '/conv_kernels' + str(idx+1) + '.npy')
-            except IOError:
-                pass
-        
+            if isinstance(layer, Conv2D):
+                try:
+                    layer.kernels = np.load(self.networkToLoadPath + '/conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy')
+                except IOError:
+                    pass
+            else:
+                numOfPoolLayers += 1
+            
     def save(self):      
-        for idx, layer in enumerate(self.layers):
+        for idx, layer in enumerate(self.denseLayers):
             try:
                 np.save(self.networkToLoadPath + '/ff_weights' + str(idx+1) + '.npy', layer.weights)
                 np.save(self.networkToLoadPath + '/ff_biases' + str(idx+1) + '.npy', layer.biases)
             except IOError:
                 pass 
+            
+        numOfPoolLayers = 0
         for idx, layer in enumerate(self.convLayers):
-            try:
-                np.save(self.networkToLoadPath + '/conv_kernels' + str(idx+1) + '.npy', layer.kernels)
-            except IOError:
-                pass      
-        #print("Weights and biases saved successfully\n")
-
+            
+            if isinstance(layer, Conv2D):
+                try:
+                    np.save(self.networkToLoadPath + '/conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy', layer.kernels)
+                except IOError:
+                    pass
+            else:
+                numOfPoolLayers += 1
 
     def run(self, mode, data, labels, learnRate=0.01):
 
