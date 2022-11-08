@@ -111,8 +111,6 @@ def main():
                     pass
                     #print("SOMETHING WENT WRONG IN ADDING THE DATA\n")
                 network.rightAnswers  = network.wrongAnswers = network.costSum = 0
-            
-            if batchCounter % 50 == 0:
                 network.save()
 
 
