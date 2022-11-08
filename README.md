@@ -10,7 +10,7 @@ LeNet is made of:
   * a pooling layer (I used the mean pool, but I read that max pool gives, for this dataset, very similar results) (C2)  
   * a convolution layer with 16 kernels (the input of each kernel are different combinations of the 6 outputs of the previous layer) (C3)  
   * a pooling layer, like the previous one (C4)  
-  * a fully connected layer with 120 neurons (with 16x3x3=256 inputs, obtained by flattening the 16 outputs of C4)  
+  * a fully connected layer with 120 neurons (with 16x4x4=256 inputs, obtained by flattening the 16 outputs of C4)  
   * a fully connected layer with 84 neurons  
   * an output layer with 10 outputs, one for each digit  
 
