@@ -16,19 +16,19 @@ class NeuralNetwork:
         self.layerSizes = layerSizes
         for idx in range(len(layerSizes)-1):
             if idx+1 == len(layerSizes)-1:
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SOFTMAX"))
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SOFTMAX")) #Options: SOFTMAX
             else:
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SIGMOID"))
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SIGMOID")) #Options: SIGMOID / RELU 
 
         self.convSizes = convSizes
 
         outputSize = 28-convSizes[0][1]+1
-        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize))
-        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, "mean"))
+        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, "MEAN")) #Options: MEAN / MAX
 
         outputSize = int(outputSize/2 -convSizes[1][1] + 1)
-        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, "SIGMOID", outputSize))
-        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, "mean"))
+        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, "SIGMOID", outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, "MEAN")) #Options: MEAN / MAX
 
         self.costSum = 0
         self.rightAnswers = 0
