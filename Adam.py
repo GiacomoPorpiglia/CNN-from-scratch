@@ -24,11 +24,11 @@ class Adam:
         m_hat_b = (self.m_b) / (1-self.beta_1**t)
         v_hat_b = (self.v_b) / (1-self.beta_2**t)
         biasesChange = learnRate * (m_hat_b / (np.sqrt(v_hat_b) + self.epsilon))
-
+        
         return weightsChange, biasesChange
         
 
-    def optimizeConv(self, kGradients, learnRate, t):
+    def optimizeConv(self, kGradients, learnRate, t):  
         self.m_k = self.beta_1 * self.m_k + (1-self.beta_1) * kGradients
         self.v_k = self.beta_2 * self.v_k + (1-self.beta_2) * (kGradients**2)
 

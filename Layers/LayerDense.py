@@ -3,15 +3,9 @@ from math import sqrt
 from numba import jit
 from numba import cuda
 from Adam import Adam
-
+from Activations import activations
 
 cuda.select_device(0)
-@jit(nopython=True)
-def updateGradientsJIT(inputs, nodeValues, gradientBNodeValues, costGradientW, costGradientB):
-    costGradientW += np.dot(inputs, nodeValues)
-    costGradientB += 1*gradientBNodeValues
-    return costGradientW, costGradientB
-
 
 @jit(nopython=True)
 def calculateOutputLayerNodeValuesJIT(nodeValues, output, expected_output):
@@ -22,7 +16,7 @@ def calculateOutputLayerNodeValuesJIT(nodeValues, output, expected_output):
                 sum -= (1-output[nodeValueIdx])*(expected_output[nodeValueIdx])
             else:
                 sum -= -output[nodeValueIdx] *(expected_output[j])
-            nodeValues[nodeValueIdx] = sum
+        nodeValues[nodeValueIdx] = sum
     return nodeValues
 
 
@@ -69,9 +63,8 @@ class LayerDense:
     #for the bias gradients, since the derivative of the weighted input in respect to the bias is 1, it multiplies the node value of the output node by 1
     def updateGradients(self):
         #updates costGradientW and costGradientB
-        self.costGradientW, self.costGradientB = updateGradientsJIT(self.inputs[:, None], self.nodeValues[None, :], self.nodeValues, self.costGradientW, self.costGradientB)
-        # self.costGradientW += np.dot(self.inputs[:,None], self.nodeValues[None,:])
-        # self.costGradientB += 1*self.nodeValues
+        self.costGradientW += np.dot(self.inputs[:,None], self.nodeValues[None,:])
+        self.costGradientB += 1*self.nodeValues
 
 
     #this function applies the gradients to the weights and biases of each layer, according to the learn rate --- it subtracts the corresponding gradient to each weight and bias, multiplied by the learn rate 
@@ -110,13 +103,10 @@ class LayerDense:
     #First, it calculates the activation function derivatives, and then it  uses them to caluclate the node values, based on the backpropagation method
     def calculateHiddenLayerNodeValues(self, oldLayer, oldNodeValues):
 
-        #calculates the node values for the hidden layer(the caculations process is different from the output layer)
-        activationDerivatives = self.output
-        
         if self.activation == "SIGMOID":
-            activationDerivatives = self.output*(1-self.output)         
+            activationDerivatives = np.copy(activations.sigmoid_derivative(self.output))  
         elif self.activation == "RELU":
-            activationDerivatives[activationDerivatives != 0] = 1
+            activationDerivatives = np.copy(activations.relu_derivative(self.output))
 
         self.nodeValues = calculaeteHiddenLayerNodeValuesJIT(oldLayer.weights, oldNodeValues, activationDerivatives)
         #self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
@@ -133,14 +123,9 @@ class LayerDense:
 
         #pass the weighted input into activation function to get output values
         if self.activation == "SIGMOID":
-            e = 2.718281828
-            self.output = 1 / (1+ e**(-self.weightedInputs))
+            self.output = activations.sigmoid(self.weightedInputs)
         elif self.activation == "RELU":
-            self.output = np.maximum([0], self.weightedInputs)
+            self.output = activations.relu(self.weightedInputs)
         elif self.activation == "SOFTMAX":
-            e = 2.718281828
-            max = np.max(self.weightedInputs)
-            expsum = np.sum(np.exp(self.weightedInputs-np.max(self.weightedInputs)))
-            self.output = e**(self.weightedInputs-max) / expsum
-
+            self.output = activations.softmax(self.weightedInputs)
         return self.output

@@ -1,10 +1,7 @@
 import numpy as np
 from scipy import signal
-
+from Activations import activations
 from Adam import Adam
-
-e = 2.718281828
-
 
 
 class Conv2D:
@@ -46,17 +43,22 @@ class Conv2D:
 
 
         if self.activation == "RELU":
-            self.outputs[self.outputs < 0 ] = 0
+            self.outputs = activations.relu(self.outputs)
         elif self.activation == "SIGMOID":
-            self.outputs = 1 / (1+ np.power(e, -self.outputs))#  e**(-self.pooledOutputs))
+            self.outputs = activations.sigmoid(self.outputs)
         return self.outputs
 
 
 
     def updateGradients(self, nodeValues):
         nodeValues = nodeValues.reshape(self.kernelNumber, self.outputs.shape[1], self.outputs.shape[2])
+
         if self.activation == "SIGMOID":
-            nodeValuesWithActDerivative = nodeValues * self.outputs*(1-self.outputs)
+            activationDerivatives = np.copy(activations.sigmoid_derivative(self.outputs))
+        elif self.activation == "RELU":
+            activationDerivatives = np.copy(activations.relu_derivative(self.outputs))
+
+        nodeValuesWithActDerivative = nodeValues * activationDerivatives
 
         inputsGradients = np.zeros(self.inputs.shape)
         sumOfAllInputs = np.sum(self.inputs, axis=0)

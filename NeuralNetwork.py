@@ -1,7 +1,7 @@
 import numpy as np
-from LayerDense import LayerDense
-from Conv2D import Conv2D
-from Pool2D import Pool2D
+from Layers.LayerDense import LayerDense
+from Layers.Conv2D import Conv2D
+from Layers.Pool2D import Pool2D
 import matplotlib.pyplot as plt
 from combinationMaps import *
 
