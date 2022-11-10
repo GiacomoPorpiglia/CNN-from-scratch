@@ -4,8 +4,7 @@ from NeuralNetwork import NeuralNetwork
 from draw import createDrawCanvas
 from loadSamples import *
 from randomizeImage import *
-
-e = 2.718281828
+import time
 
 def train(network, image_size, images_set, labels_set, counter, mode, learnRate):
     batch_size = images_set.shape[0]
@@ -91,7 +90,9 @@ def main():
             print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%", end="\r")
 
             images_train_set, labels_train_set = selectImagesAndLabels(batch_size, trainImages, trainLabels)
+            start = time.time()
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
+            print(time.time()-start)
             
             #every half epoch, run test and get results, and write train ad test accuracy + cost average to file
             if runTestWhileTraining and batchCounter % int(30000/batch_size) == 0:
@@ -106,10 +107,8 @@ def main():
                         f.write(str(round((network.rightAnswers/(network.rightAnswers+network.wrongAnswers))*100, 3)) + ', ')
                     with open(networkToLoadPath + '/costData.txt', 'a') as f:
                         f.write(str(round((network.costSum/(network.rightAnswers+network.wrongAnswers)), 3)) + ', ')
-                    #print("DATA ADDED SUCCESSFULLY\n")
                 except:
                     pass
-                    #print("SOMETHING WENT WRONG IN ADDING THE DATA\n")
                 network.rightAnswers  = network.wrongAnswers = network.costSum = 0
                 network.save()
 
