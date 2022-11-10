@@ -50,8 +50,8 @@ By running the main file, you can choose between several options:
   - viewtest, to see a single image from the test dataset with the network guess.(so you can see where the network fails the most)
   - selftest, to draw your own numbers and test the network with them, which I find very fun!
   
-Take a look at the selftest mode:
-<img src="/images/selftest.gif" width="400px" />
+Take a look at the selftest mode: <br />
+<img src="/images/selftest.gif" width="80%" />
 <br />
 It's easier done than said, so I encourage you to try it on your own and have fun with it!
 The model is saved in .npy files, each containing kernels/weights/biases for each layer.
