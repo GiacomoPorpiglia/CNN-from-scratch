@@ -49,6 +49,9 @@ By running the main file, you can choose between several options:
   - test, to see the accuracy of the model on the 10000 test images.
   - viewtest, to see a single image from the test dataset with the network guess.(so you can see where the network fails the most)
   - selftest, to draw your own numbers and test the network with them, which I find very fun!
+  
+Take a look at the selftest mode:
+[Gif](/images/2022-11-10-15-45-53.gif)
 It's easier done than said, so I encourage you to try it on your own and have fun with it!
 The model is saved in .npy files, each containing kernels/weights/biases for each layer.
 
