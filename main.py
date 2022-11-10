@@ -61,6 +61,7 @@ def main():
     networkToLoadPath = input("Do you want to load an existing network? If so, type the path of the folder where the network is (relative or absolute). If the network isn't found in that path, no network will be loaded.\nPath: ")
 
     if mode == "train":
+
         runTestWhileTraining = input("Do you want to run the network on the test data while training, to get infos about the test accuracy %? [Y/n]: ")
         if runTestWhileTraining == "Y" or runTestWhileTraining == "y":
             runTestWhileTraining = True
@@ -75,6 +76,7 @@ def main():
     batchCounter = 0
 
     learnRate = 0.01
+    
     if mode == 'train':
         batch_size = 128
         test_batch_size = 2000
