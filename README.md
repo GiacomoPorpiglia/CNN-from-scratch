@@ -31,15 +31,15 @@ In fact I experimented that every number in the dataset is centered and arranged
 What I did to avoid this was **distorcing the train images**, giving them some randomness: I shifted them, zoomed them, and rotated them, to help convergence.
 The results I got (with a learn rate of 0.01) are very interesting:  
   - A **98.55% accuracy** on the training data (undistorted), more exactly 59131 right, 869 wrong
-  - A **98.46% accuracy** on the test data, 9846 right, 154 wrong.
+  - A **98.50% accuracy** on the test data, 9850 right, 150 wrong.
     - On this result, I also want to point out something very interesting. As you can read in the [official MNIST dataset website](http://yann.lecun.com/exdb/mnist/), the first 5000 images of the test dataset are supposed to be simpler than the last 5000.
-    Instead, I got a 97.82% accuracy on the "easy" ones, and a **99.1% accuracy** on the hard ones!
+    Instead, I got a 97.88% accuracy on the "easy" ones, and a **99.12% accuracy** on the hard ones!
     I personally don't have an explanation on why is this, but if you have let me know!
 
 ![training graph](https://github.com/GiacomoPorpiglia/CNN-from-scratch/blob/master/images/train_graph_98%2C46%25.png)
 
 
-All the data of the training are in 3 files located in the folder "saved_network_98.46%" (they are "trainData.txt", "testData.txt", and "costData.txt")
+All the data of the training are in 3 files located in the folder "saved_network_98.5%" (they are "trainData.txt", "testData.txt", and "costData.txt")
 As you may notice, the cost seems pretty high for such accuracy, but keep in mind the training was done on the distorted images: in fact, the accuracy on the training images during the training was only around 95%.
 
 ## How to use
