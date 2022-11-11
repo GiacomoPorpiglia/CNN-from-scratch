@@ -64,5 +64,5 @@ The model is saved in .npy files, each containing kernels/weights/biases for eac
 Do you know what's the main problem with such things without any library? GPU optimization!
 In fact, this program runs on the CPU, and to train it **for 20 epochs, it took roughly 2 hours!**
 I know this is not optimal, but speed wasn't the goal of this project, anyway!
-I know there are some ways (like CUDA) to make the program run on the GPU, but it would take me very long to rewrite the code.
-Anyway, I hope you like this project as much as I have enjoyde making it, and let me know what you think!
+I know there are some ways (like CUDA) to make array computations run on the GPU, but it would take me very long to rewrite the code.
+Anyway, I hope you like this project as much as I have enjoyed making it, and let me know what you think!
