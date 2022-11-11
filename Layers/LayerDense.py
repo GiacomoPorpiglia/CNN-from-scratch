@@ -2,8 +2,8 @@ import numpy as np
 from math import sqrt
 from numba import jit
 from numba import cuda
-from Adam import Adam
 from Activations import activations
+from Settings.settings import optimizer
 
 cuda.select_device(0)
 
@@ -46,7 +46,7 @@ class LayerDense:
         self.inputs = np.zeros(self.n_inputs)
         self.weightedInputs = np.zeros(self.n_neurons)
 
-        self.optim = Adam()
+        self.optim = optimizer()
 
         #FOR ADAM
         self.numIterations = 0
@@ -70,7 +70,6 @@ class LayerDense:
     #this function applies the gradients to the weights and biases of each layer, according to the learn rate --- it subtracts the corresponding gradient to each weight and bias, multiplied by the learn rate 
     def applyGradients(self, learnRate):
         #updates weights and biases by adding the gradients multiplied by the learn rate
-        #ADAM
         self.numIterations+=1
         dWeights, dBiases = self.optim.optimizeFC(wGradients=self.costGradientW, bGradients=self.costGradientB, learnRate=learnRate, t=self.numIterations)
         self.weights -= dWeights

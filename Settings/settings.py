@@ -1,0 +1,7 @@
+from Optimizers.Adam import Adam
+from Optimizers.Momentum import Momentum
+learnRate = 0.01
+batch_size = 128
+LDNSize = [256, 120, 84, 10] #Size of the layer-dense part of the network (the first number is not the size of the first layer, it is the number of inputs)
+CNNSize = [[6, 5], [16, 5]] #each array contains [number of kernels, kernel_size]. The first one is made of 6 kernels, each of 5x5 #NOTE: IF you want to change the dimensiions of the layers, you will also need to change the combinations in combinationsMaps.py file
+optimizer = Adam
