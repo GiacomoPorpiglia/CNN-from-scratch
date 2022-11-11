@@ -17,7 +17,7 @@ def set_text(string, coordx, coordy, fontSize): #Function to set text
     return (text, textRect)
 
 
-def createDrawCanvas(network):
+def drawCanvas(network):
     pygame.init()
 
 
