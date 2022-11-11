@@ -4,6 +4,8 @@ from NeuralNetwork import NeuralNetwork
 from draw import createDrawCanvas
 from loadSamples import *
 from randomizeImage import *
+from Settings.settings import *
+print(batch_size)
 
 def train(network, image_size, images_set, labels_set, counter, mode, learnRate):
     batch_size = images_set.shape[0]
@@ -50,7 +52,7 @@ def viewtest(network, image_size, images_set, labels_set, mode):
     network.run(mode, images_set, labels_set)
 
 
-def main():
+def main(learnRate, batch_size, LDNSize, CNNSize):
 
     mode = input("Type 'train' if you want to train your model\nType 'test' if you want to run a test (Note: To run the test, you must have trained the network before)\nType 'viewtest' if you want to see the image and the output of the network\nType 'selftest' if you want to draw the digits yourself\n")
     
@@ -70,15 +72,11 @@ def main():
 
     #--------------------Neural Network Loop--------------------------
 
-    network = NeuralNetwork([256, 120, 84, 10], [[6, 5], [16, 5]], networkToLoadPath)
+    network = NeuralNetwork(LDNSize, CNNSize, networkToLoadPath)
 
     image_size = 28 #28x28 pixels
     batchCounter = 0
-
-    learnRate = 0.01
-    
     if mode == 'train':
-        batch_size = 128
         test_batch_size = 2000
         trainImages = loadImages('train')
         trainLabels = loadLabels('train')
@@ -88,7 +86,7 @@ def main():
         while True:
             batchCounter+=1
             epochProgress = batchCounter*batch_size/60000
-            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%", end="\r")
+            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%")
 
             images_train_set, labels_train_set = selectImagesAndLabels(batch_size, trainImages, trainLabels)
             
@@ -136,4 +134,4 @@ def main():
 
 
 if __name__=="__main__":
-    main()
+    main(learnRate, batch_size,LDNSize, CNNSize)

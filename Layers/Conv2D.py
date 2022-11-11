@@ -1,8 +1,7 @@
 import numpy as np
 from scipy import signal
 from Activations import activations
-from Adam import Adam
-
+from Settings.settings import optimizer
 
 class Conv2D:
     def __init__(self, kernelNumber, kernelSize, combinations, activation, outputSize):
@@ -22,7 +21,7 @@ class Conv2D:
 
         #FOR ADAM
         self.numIterations = 0
-        self.optim = Adam()
+        self.optim = optimizer()
 
     
     def initializeKernels(self, kernelNumber, kernelSize):
@@ -76,7 +75,6 @@ class Conv2D:
         
     
     def applyGradients(self, learnRate):
-        #ADAM
         self.numIterations += 1
         dKernels = self.optim.optimizeConv(kGradients=self.kernelsGradients, learnRate=learnRate, t=self.numIterations)
         self.kernels -= dKernels
