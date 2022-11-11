@@ -29,7 +29,7 @@ Now let's talk about how I trained the model. Now, my goal wasn't just getting a
 Now, someone may think that, if the model has a very high training accuracy, it will also generalize very well on any given image, but I found that wasn't the case.
 In fact I experimented that every number in the dataset is centered and arranged in a specific way (so they fit in a 20x20 box in the center of the image). So, when I drew my own numbers, I often got wrong answers, despite the accuracy being > 97%.  <br />
 What I did to avoid this was **distorcing the train images**, giving them some randomness: I shifted them, zoomed them, and rotated them, to help convergence.
-The results I got (with a learn rate of 0.01 for a total of 20 epochs) are very interesting:  
+The results I got (with a learn rate of 0.01 for a total of 20 epochs) were much better than I hoped:  
   - A **98.55% accuracy** on the training data (undistorted), more exactly 59131 right, 869 wrong
   - A **98.50% accuracy** on the test data, 9850 right, 150 wrong.
     - On this result, I also want to point out something very interesting. As you can read in the [official MNIST dataset website](http://yann.lecun.com/exdb/mnist/), the first 5000 images of the test dataset are supposed to be simpler than the last 5000.
