@@ -53,6 +53,9 @@ By running the main file, you can choose between several options:
 Take a look at the selftest mode: <br /> <br />
 <img src="/images/selftest.gif" width="80%" />
 <br /> <br />
+
+To change the settings, like learn-rate or layer dimensions, they are all stored in the settings file, in the Settings folder. <br />
+
 It's easier done than said, so I encourage you to try it on your own and have fun with it!
 The model is saved in .npy files, each containing kernels/weights/biases for each layer.
 
