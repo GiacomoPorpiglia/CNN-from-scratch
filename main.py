@@ -62,13 +62,6 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     
     networkToLoadPath = input("Do you want to load an existing network? If so, type the path of the folder where the network is (relative or absolute). If the network isn't found in that path, no network will be loaded.\nPath: ")
 
-    if mode == "train":
-
-        runTestWhileTraining = input("Do you want to run the network on the test data while training, to get infos about the test accuracy %? [Y/n]: ")
-        if runTestWhileTraining == "Y" or runTestWhileTraining == "y":
-            runTestWhileTraining = True
-        else:
-            runTestWhileTraining = False
 
     #--------------------Neural Network Loop--------------------------
 
@@ -77,38 +70,51 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     image_size = 28 #28x28 pixels
     batchCounter = 0
     if mode == 'train':
-        test_batch_size = 2000
         trainImages = loadImages('train')
         trainLabels = loadLabels('train')
-        if runTestWhileTraining:
-            testImages = loadImages('test')
-            testLabels = loadLabels('test')
+
+        test_batch_size = 10000
+        testImages = loadImages('test')
+        testLabels = loadLabels('test')
+        maxAccuracy = 0
+
         while True:
             batchCounter+=1
             epochProgress = batchCounter*batch_size/60000
-            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%")
+
+            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%", end="\r")
 
             images_train_set, labels_train_set = selectImagesAndLabels(batch_size, trainImages, trainLabels)
-            
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
-            #every half epoch, run test and get results, and write train ad test accuracy + cost average to file
-            if runTestWhileTraining and batchCounter % int(30000/batch_size) == 0:
+            #every epoch, run test and get results, and write train, test accuracy and cost average to file
+            if epochProgress-int(epochProgress) >= 1:
+                print(f"\nEpoch {int(epochProgress)+1} completed")
+
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
+                trainAccuracy = round((network.rightAnswers/(network.rightAnswers+network.wrongAnswers))*100, 3)
+                testAccuracy = round((network.testRightAnswers/test_batch_size)*100, 3)
+                costAverage = round((network.costSum/(network.rightAnswers+network.wrongAnswers)), 3)
                 #WRITE THE TRAINING DATA TO FILE
                 try:
                     with open(networkToLoadPath + '/testData.txt', 'a') as f:
-                        f.write(str(round((network.testRightAnswers/test_batch_size)*100, 3)) + ', ')
+                        f.write(str(testAccuracy) + ', ')
                     with open(networkToLoadPath + '/trainData.txt', 'a') as f:
-                        f.write(str(round((network.rightAnswers/(network.rightAnswers+network.wrongAnswers))*100, 3)) + ', ')
+                        f.write(str(trainAccuracy) + ', ')
                     with open(networkToLoadPath + '/costData.txt', 'a') as f:
-                        f.write(str(round((network.costSum/(network.rightAnswers+network.wrongAnswers)), 3)) + ', ')
+                        f.write(str(costAverage) + ', ')
                 except:
                     pass
                 network.rightAnswers  = network.wrongAnswers = network.costSum = 0
-                network.save()
+                if testAccuracy > maxAccuracy:
+                    maxAccuracy = testAccuracy
+                    network.save()
+                    print(f"Network saved at epoch {int(epochProgress)+1} with test accuracy: {testAccuracy}")
+                else:
+                    print("\n")
+                
 
 
     elif mode == 'test':

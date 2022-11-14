@@ -9,27 +9,30 @@ with open(path + "/testData.txt") as f:
         
         editedLine = line.split(', ')
         editedLine.pop()
-        for x in editedLine:
-            testData.append(float(x))
+        for idx, x in enumerate(editedLine):
+            if idx%2==0:
+                testData.append(float(x))
 
 with open(path + "/trainData.txt") as f:
     for line in f:
         editedLine = line.split(', ')
         editedLine.pop()
-        for x in editedLine:
-            trainData.append(float(x))
+        for idx, x in enumerate(editedLine):
+            if idx%2==0:
+                trainData.append(float(x))
 
 with open(path + "/costData.txt") as f:
     for line in f:
         editedLine = line.split(', ')
         editedLine.pop()
-        for x in editedLine:
-            costData.append(float(x)*10)
+        for idx, x in enumerate(editedLine):
+            if idx%2==0:
+                costData.append(float(x)*10)
 
 xaxis = []
 
 for elem_idx in range(len(trainData)):
-    xaxis.append(round(elem_idx/2, 4))
+    xaxis.append(round(elem_idx, 4))
 
 listof_YTicks = np.arange(0, 100, 5)
 plt.yticks(listof_YTicks)
