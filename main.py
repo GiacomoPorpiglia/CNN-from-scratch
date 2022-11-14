@@ -88,7 +88,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
-            if epochProgress-int(epochProgress) >= 1:
+            if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
                 print(f"\nEpoch {int(epochProgress)+1} completed")
 
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, testImages, testLabels)
