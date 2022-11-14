@@ -52,7 +52,7 @@ def drawCanvas(network):
         sub_surface = display.subsurface(area)
         
         pixel_data = np.array(pygame.surfarray.array3d(sub_surface))
-        pixel_data = skimage.measure.block_reduce(pixel_data, (1, 1, 3), np.max)
+        pixel_data = skimage.measure.block_reduce(pixel_data, (1, 1, 3), np.max) #convert rgb in black/white
         pixel_data = pixel_data.reshape(pixel_data.shape[0], pixel_data.shape[1])
         
         unoriented_image = skimage.measure.block_reduce(pixel_data, (blockYSize, blockXSize), np.mean)
