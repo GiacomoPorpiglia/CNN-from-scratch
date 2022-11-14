@@ -36,7 +36,7 @@ The results I got (with a learn rate of 0.01 for a total of 20 epochs) were much
     Instead, I got a 97.88% accuracy on the "easy" ones, and a **99.12% accuracy** on the hard ones!
     I personally don't have an explanation on why is this, but if you have let me know!
 
-![training graph](https://github.com/GiacomoPorpiglia/CNN-from-scratch/blob/master/images/train_graph_98%2C46%25.png)
+![training graph](https://github.com/GiacomoPorpiglia/CNN-from-scratch/blob/master/images/train_graph_98%2C5%25.png)
 
 
 All the data of the training are in 3 files located in the folder "saved_network_98.5%" (they are "trainData.txt", "testData.txt", and "costData.txt")
