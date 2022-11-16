@@ -1,28 +1,7 @@
 import numpy as np
 from math import sqrt
-from numba import jit
-from numba import cuda
 from Activations import activations
 from Settings.settings import optimizer
-
-cuda.select_device(0)
-
-@jit(nopython=True)
-def calculateOutputLayerNodeValuesJIT(nodeValues, output, expected_output):
-    for nodeValueIdx in range(len(nodeValues)):
-        sum = 0
-        for j in range(output.shape[0]):
-            if nodeValueIdx == j:
-                sum -= (1-output[nodeValueIdx])*(expected_output[nodeValueIdx])
-            else:
-                sum -= -output[nodeValueIdx] *(expected_output[j])
-        nodeValues[nodeValueIdx] = sum
-    return nodeValues
-
-
-@jit(nopython=True)
-def calculaeteHiddenLayerNodeValuesJIT(oldLayerWeights, oldNodeValues, activationDerivatives):
-    return np.dot((oldLayerWeights), oldNodeValues) * activationDerivatives
 
 
 class LayerDense:
@@ -85,15 +64,14 @@ class LayerDense:
     def calculateOutputLayerNodeValues(self, expected_output):
         #calculates the node values for the output layer (with softmax and cross entropy) 
         if self.activation == "SOFTMAX":
-            self.nodeValues = calculateOutputLayerNodeValuesJIT(self.nodeValues, self.output, expected_output)
-            # for nodeValueIdx in range(len(self.nodeValues)):
-            #     sum = 0
-            #     for j in range(self.output.shape[0]):
-            #         if nodeValueIdx == j:
-            #             sum -= (1-self.output[nodeValueIdx])*(expected_output[nodeValueIdx])
-            #         else:
-            #             sum -= -self.output[nodeValueIdx] *(expected_output[j])
-            #     self.nodeValues[nodeValueIdx] = sum
+            for nodeValueIdx in range(len(self.nodeValues)):
+                sum = 0
+                for j in range(self.output.shape[0]):
+                    if nodeValueIdx == j:
+                        sum -= (1-self.output[nodeValueIdx])*(expected_output[nodeValueIdx])
+                    else:
+                        sum -= -self.output[nodeValueIdx] *(expected_output[j])
+                self.nodeValues[nodeValueIdx] = sum
         
         return self.nodeValues
 
@@ -107,8 +85,7 @@ class LayerDense:
         elif self.activation == "RELU":
             activationDerivatives = np.copy(activations.relu_derivative(self.output))
 
-        self.nodeValues = calculaeteHiddenLayerNodeValuesJIT(oldLayer.weights, oldNodeValues, activationDerivatives)
-        #self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
+        self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
         return self.nodeValues
 
 
