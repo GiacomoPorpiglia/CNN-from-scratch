@@ -70,11 +70,11 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     image_size = 28 #28x28 pixels
     batchCounter = 0
     if mode == 'train':
-        trainImages = loadImages('train')
+        trainImages = loadImages('train', image_size)
         trainLabels = loadLabels('train')
 
         test_batch_size = 10000
-        testImages = loadImages('test')
+        testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
         maxAccuracy = 0
 
@@ -84,14 +84,14 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
 
             print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%", end="\r")
 
-            images_train_set, labels_train_set = selectImagesAndLabels(batch_size, trainImages, trainLabels)
+            images_train_set, labels_train_set = selectImagesAndLabels(batch_size, image_size, trainImages, trainLabels)
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
             if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
                 print(f"\nEpoch {int(epochProgress)+1} completed")
 
-                images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, testImages, testLabels)
+                images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
                 trainAccuracy = round((network.rightAnswers/(network.rightAnswers+network.wrongAnswers))*100, 3)
@@ -122,7 +122,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         testLabels = loadLabels('test')
         batch_size = 10000
         while True:
-            images_test_set, labels_test_set = selectImagesAndLabels(batch_size, testImages, testLabels)
+            images_test_set, labels_test_set = selectImagesAndLabels(batch_size, image_size, testImages, testLabels)
             test(network, image_size, images_test_set, labels_test_set, 'test')
             print("Accuracy:", network.testRightAnswers/(batch_size) *100, "%")
             print(network.testRightAnswers, network.testWrongAnswers)
@@ -131,7 +131,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         testImages = loadImages('test')
         testLabels = loadLabels('test')
         while True:
-            images_test_set, labels_test_set = selectImagesAndLabels(1, testImages, testLabels)
+            images_test_set, labels_test_set = selectImagesAndLabels(1, image_size, testImages, testLabels)
             viewtest(network, image_size, images_test_set, labels_test_set, 'viewtest')
     elif mode == 'selftest':
         #with selftest mode, a canvas will open for the user to draw the number, then by pressing enter the data will be passed thorough the network, and its answer will be calculated
