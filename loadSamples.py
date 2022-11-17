@@ -1,7 +1,7 @@
 import gzip
 import numpy as np
 
-def loadImages(mode):
+def loadImages(mode, image_size):
     if mode == 'train':
         f_images = gzip.open('./mnist/train-images-idx3-ubyte.gz', 'r')
         totalImages = 60000
@@ -11,9 +11,9 @@ def loadImages(mode):
     f_images.seek(0, 0)
     f_images.seek(16)
     c = 0
-    images = np.ndarray(shape=(totalImages, 784))
+    images = np.ndarray(shape=(totalImages, int(image_size*image_size)))
     while c < totalImages:
-        image_buf = f_images.read(784) 
+        image_buf = f_images.read(int(image_size*image_size)) 
         image = np.frombuffer(image_buf, dtype=np.uint8).astype(np.float32)
         images[c] = image
         c+=1
@@ -38,10 +38,10 @@ def loadLabels(mode):
         c+=1
     return labels
 
-def selectImagesAndLabels(batch_size, images, labels):
+def selectImagesAndLabels(batch_size, image_size, images, labels):
     rng = np.random.default_rng() # so that the generated indices aren't chosen twice
     batchIdxs = rng.choice(images.shape[0], size=batch_size, replace=False)
-    images_set = np.zeros(shape=(batch_size, 784))
+    images_set = np.zeros(shape=(batch_size, int(image_size*image_size)))
     labels_set = np.zeros(shape=(batch_size, 1))
     for set_idx, idx in enumerate(batchIdxs):
         images_set[set_idx] = np.copy(images[idx])
