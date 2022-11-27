@@ -5,7 +5,6 @@ from drawCanvas import drawCanvas
 from loadSamples import *
 from randomizeImage import *
 from Settings.settings import *
-print(batch_size)
 
 def train(network, image_size, images_set, labels_set, counter, mode, learnRate):
     batch_size = images_set.shape[0]
@@ -118,7 +117,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
 
 
     elif mode == 'test':
-        testImages = loadImages('test')
+        testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
         batch_size = 10000
         while True:
@@ -128,7 +127,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             print(network.testRightAnswers, network.testWrongAnswers)
             network.testRightAnswers = network.testWrongAnswers = 0
     elif mode == 'viewtest':
-        testImages = loadImages('test')
+        testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
         while True:
             images_test_set, labels_test_set = selectImagesAndLabels(1, image_size, testImages, testLabels)
