@@ -5,7 +5,6 @@ from drawCanvas import drawCanvas
 from loadSamples import *
 from randomizeImage import *
 from Settings.settings import *
-print(batch_size)
 
 def train(network, image_size, images_set, labels_set, counter, mode, learnRate):
     batch_size = images_set.shape[0]
