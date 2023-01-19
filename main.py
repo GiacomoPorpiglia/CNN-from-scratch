@@ -134,7 +134,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             viewtest(network, image_size, images_test_set, labels_test_set, 'viewtest')
     elif mode == 'selftest':
         #with selftest mode, a canvas will open for the user to draw the number, then by pressing enter the data will be passed thorough the network, and its answer will be calculated
-            drawCanvas(network)
+        drawCanvas(network)
 
 
 
