@@ -50,6 +50,7 @@ You can choose between several options:
   - test, to see the accuracy of the model on the 10000 test images.
   - viewtest, to see a single image from the test dataset with the network guess.(so you can see where the network fails the most)
   - selftest, to draw your own numbers and test the network with them, which I find very fun!
+
 Also, if you'd like to play around using the pre-trained model, you will need to then type the path to the folder "saved_network_98.5%", where the network is saved. <br />
 Anyway, it should e pretty self-explainatory if you read what the console says!
 Take a look at the selftest mode: <br /> <br />
