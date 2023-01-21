@@ -57,11 +57,16 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     
     #if the user diesn't write one of the 3 modes, the program will just stop
     if mode != "train" and mode != "test" and mode != "viewtest" and mode != "selftest":
+        print("Please make sure you type one of the above options. Please try again.")
         return
     
     networkToLoadPath = input("Do you want to load an existing network? If so, type the path of the folder where the network is (relative or absolute). If the network isn't found in that path, no network will be loaded.\nPath: ")
 
-
+    if networkToLoadPath=="" and mode != "train":
+        print("No path was specified. Initializing a random, untrained network...")
+    elif networkToLoadPath=="" and mode == "train":
+        print("You must specify the path were you want the network to be saved. Try again.")
+        return
     #--------------------Neural Network Loop--------------------------
 
     network = NeuralNetwork(LDNSize, CNNSize, networkToLoadPath)
