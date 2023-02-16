@@ -44,7 +44,11 @@ As you may notice, the cost seems pretty high for such accuracy, but keep in min
 
 ## How to use
 
-To use the project, you can easily clone the repo or download it, and then run the **main.py** file. <br />
+To use the project, you can easily clone the repo or download it.
+To install the required dependecies, run the command ```bash
+pip install -r requirements.txt
+```
+and then run the **main.py** file. <br />
 You can choose between several options:
   - train, if you want to train the model. Keep in mind that you have to specify the folder in which you want the model to be saved for future use.
   - test, to see the accuracy of the model on the 10000 test images.
