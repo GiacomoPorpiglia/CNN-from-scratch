@@ -45,7 +45,7 @@ As you may notice, the cost seems pretty high for such accuracy, but keep in min
 ## How to use
 
 To use the project, you can easily clone the repo or download it.
-To install the required dependecies, run the command 
+To install the required dependecies, go to the project folder, open a command prompt and run the command 
 ```
 pip install -r requirements.txt
 ```
