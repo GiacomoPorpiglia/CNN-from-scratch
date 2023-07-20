@@ -3,6 +3,8 @@ from scipy import signal
 from Activations import activations
 from Settings.settings import optimizer
 
+#This file contains the class for the convolutional layer
+
 class Conv2D:
     def __init__(self, kernelNumber, kernelSize, combinations, activation, outputSize):
         self.kernelNumber = kernelNumber
@@ -27,7 +29,7 @@ class Conv2D:
     def initializeKernels(self, kernelNumber, kernelSize):
         return np.random.randn(kernelNumber, kernelSize, kernelSize)
 
-    
+    #function to compute the output of the layer
     def forward(self, inputs):
         self.inputs = np.copy(inputs)
 
@@ -48,7 +50,7 @@ class Conv2D:
         return self.outputs
 
 
-
+    #function to update the gradients f the layer based on gradient descent
     def updateGradients(self, nodeValues):
         nodeValues = nodeValues.reshape(self.kernelNumber, self.outputs.shape[1], self.outputs.shape[2])
 
@@ -73,7 +75,7 @@ class Conv2D:
 
         return inputsGradients
         
-    
+    #updates the weight for the next iteration
     def applyGradients(self, learnRate):
         self.numIterations += 1
         dKernels = self.optim.optimizeConv(kGradients=self.kernelsGradients, learnRate=learnRate, t=self.numIterations)
