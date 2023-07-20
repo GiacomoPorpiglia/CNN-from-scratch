@@ -1,5 +1,7 @@
 import numpy as np
 
+# This file contains the actvations functions and functions to calculate its derivatives
+
 def relu(vals):
     vals[vals < 0] = 0
     return vals

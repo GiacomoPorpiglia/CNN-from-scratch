@@ -3,6 +3,7 @@ from math import sqrt
 from Activations import activations
 from Settings.settings import optimizer
 
+#This file contains the LayerDense class, which describes a layer of neurons 
 
 class LayerDense:
     def __init__(self, n_inputs, n_neurons, activation):

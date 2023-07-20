@@ -55,7 +55,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
 
     mode = input("Type 'train' if you want to train your model\nType 'test' if you want to run a test (Note: To run the test, you must have trained the network before)\nType 'viewtest' if you want to see the image and the output of the network\nType 'selftest' if you want to draw the digits yourself\n")
     
-    #if the user diesn't write one of the 3 modes, the program will just stop
+    #if the user doesn't write one of the 4 modes, the program will just stop
     if mode != "train" and mode != "test" and mode != "viewtest" and mode != "selftest":
         print("Please make sure you type one of the above options. Please try again.")
         return
@@ -82,7 +82,9 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         testLabels = loadLabels('test')
         maxAccuracy = 0
 
-        while True:
+        maxEpochs = int(input("Type the number of epochs you would like to train the model for: "))
+        currentEpoch = 0
+        while currentEpoch < maxEpochs:
             batchCounter+=1
             epochProgress = batchCounter*batch_size/60000
 
@@ -94,7 +96,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
             if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
                 print(f"\nEpoch {int(epochProgress)+1} completed")
-
+                currentEpoch+=1
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
@@ -140,6 +142,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     elif mode == 'selftest':
         #with selftest mode, a canvas will open for the user to draw the number, then by pressing enter the data will be passed thorough the network, and its answer will be calculated
         drawCanvas(network)
+
 
 
 
