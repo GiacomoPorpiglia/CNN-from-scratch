@@ -5,6 +5,14 @@ from drawCanvas import drawCanvas
 from loadSamples import *
 from randomizeImage import *
 from Settings.settings import *
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--mode', help="Required ...... Specify the mode: You can choose between train, test, selftest and viewtest.", required=True,action='store')
+parser.add_argument('--path', help="Required ...... Specify the path you want to load an existing network from, or in case of train where you want the new network to be stored.", required=True, action='store')
+parser.add_argument('--epochs', help="Optional ...... Default set to 20, specifies the number of epochs you want to train the model for.", action='store')
+args = parser.parse_args()
+
 
 def train(network, image_size, images_set, labels_set, counter, mode, learnRate):
     batch_size = images_set.shape[0]
@@ -29,6 +37,7 @@ def train(network, image_size, images_set, labels_set, counter, mode, learnRate)
     network.run(mode, images_set, labels_set, learnRate)
    
 def test(network, image_size, images_set, labels_set, mode):
+    print("Running test...")
     batch_size = images_set.shape[0]
 
     images_set = images_set.reshape(batch_size, image_size*image_size)
@@ -53,14 +62,13 @@ def viewtest(network, image_size, images_set, labels_set, mode):
 
 def main(learnRate, batch_size, LDNSize, CNNSize):
 
-    mode = input("Type 'train' if you want to train your model\nType 'test' if you want to run a test (Note: To run the test, you must have trained the network before)\nType 'viewtest' if you want to see the image and the output of the network\nType 'selftest' if you want to draw the digits yourself\n")
-    
+    mode = args.mode
     #if the user doesn't write one of the 4 modes, the program will just stop
     if mode != "train" and mode != "test" and mode != "viewtest" and mode != "selftest":
         print("Please make sure you type one of the above options. Please try again.")
         return
     
-    networkToLoadPath = input("Do you want to load an existing network? If so, type the path of the folder where the network is (relative or absolute). If the network isn't found in that path, no network will be loaded.\nPath: ")
+    networkToLoadPath = args.path
 
     if networkToLoadPath=="" and mode != "train":
         print("No path was specified. Initializing a random, untrained network...")
@@ -82,13 +90,13 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         testLabels = loadLabels('test')
         maxAccuracy = 0
 
-        maxEpochs = int(input("Type the number of epochs you would like to train the model for: "))
+        maxEpochs = 20 if args.epochs is None else int(args.epochs)
         currentEpoch = 0
         while currentEpoch < maxEpochs:
             batchCounter+=1
             epochProgress = batchCounter*batch_size/60000
 
-            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 3)}%", end="\r")
+            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 2):.2f}%", end="\r")
 
             images_train_set, labels_train_set = selectImagesAndLabels(batch_size, image_size, trainImages, trainLabels)
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)

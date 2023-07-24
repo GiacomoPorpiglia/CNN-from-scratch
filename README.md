@@ -44,13 +44,24 @@ As you may notice, the cost seems pretty high for such accuracy, but keep in min
 
 ## How to use
 
-By running the main file, you can choose between several options:
-  - train, if you want to train the model. Keep in mind that you have to specify the folder in which you want the model to be saved for future use.
-  - test, to see the accuracy of the model on the 10000 test images.
-  - viewtest, to see a single image from the test dataset with the network guess.(so you can see where the network fails the most)
-  - selftest, to draw your own numbers and test the network with them, which I find very fun!
-It's easier done than said, so I encourage you to try it on your own and have fun with it!
-The model is saved in .npy files, each containing kernels/weights/biases for each layer.
+You can choose between 4 modes: train, test, viewtest and selftest. </br>
+With <b>train</b> you can train a new model. Here is an example of execution: </br>
+```
+python main.py --mode train --path /path/to/network/folder --epochs <numberOfEpochs(default: 20)>
+```
+with <b>test</b> you can test an existing model with a batch of images and get the accuracy of the model.</br>
+```
+python main.py --mode test --path /path/to/network/folder>
+```
+With <b>viewtest</b> you can view the images the model is computing, associated with the model answer and confidence relative to it.</br>
+```
+python main.py --mode viewtest --path /path/to/network/folder>
+```
+With <b>selftest</b> you can draw numbers yourself and feed them to the network, and see if it can recognize what they are!
+```
+python main.py --mode selftest --path /path/to/network/folder>
+```
+
 
 ## An open issue: GPU optimization
 
