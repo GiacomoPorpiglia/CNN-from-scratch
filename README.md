@@ -63,7 +63,7 @@ With <b>selftest</b> you can draw numbers yourself and feed them to the network,
 python main.py --mode selftest --path /path/to/network/folder
 ```
 
-=======
+
 To use the project, you can easily clone the repo or download it.
 To install the required dependecies, go to the project folder, open a command prompt and run the command 
 ```
