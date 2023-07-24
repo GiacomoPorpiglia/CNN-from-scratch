@@ -72,6 +72,7 @@ pip install -r requirements.txt
 and then run the **main.py** file. <br />
 
 Also, if you'd like to play around using the pre-trained model, you will need to set the --path to the folder "saved_network_98.5%", where the network is saved. <br />
+
 Take a look at the selftest mode: <br /> <br />
 <img src="/images/selftest.gif" width="80%" />
 <br /> <br />
