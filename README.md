@@ -44,6 +44,12 @@ As you may notice, the cost seems pretty high for such accuracy, but keep in min
 
 ## How to use
 
+To use the project, you can easily clone the repo or download it.
+To install the required dependecies, go to the project folder, open a command prompt and run the command 
+```
+pip install -r requirements.txt
+```
+and then run the **main.py** file. <br />
 
 You can choose between 4 modes: train, test, viewtest and selftest. </br>
 With <b>train</b> you can train a new model. Here is an example of execution: </br>
@@ -63,15 +69,7 @@ With <b>selftest</b> you can draw numbers yourself and feed them to the network,
 python main.py --mode selftest --path /path/to/network/folder
 ```
 
-
-To use the project, you can easily clone the repo or download it.
-To install the required dependecies, go to the project folder, open a command prompt and run the command 
-```
-pip install -r requirements.txt
-```
-and then run the **main.py** file. <br />
-
-Also, if you'd like to play around using the pre-trained model, you will need to set the --path to the folder "saved_network_98.5%", where the network is saved. <br />
+Also, you can play around using the pre-trained model, you will need to set the --path to the folder "saved_network_98.5%", where the network is saved. <br />
 
 Take a look at the selftest mode: <br /> <br />
 <img src="/images/selftest.gif" width="80%" />
