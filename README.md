@@ -54,19 +54,19 @@ and then run the **main.py** file. <br />
 You can choose between 4 modes: train, test, viewtest and selftest. </br>
 With <b>train</b> you can train a new model. Here is an example of execution: </br>
 ```
-python main.py --mode train --path /path/to/network/folder --epochs <numberOfEpochs(default: 20)>
+python main.py --mode train --path path/to/network/folder --epochs <numberOfEpochs(default: 20)>
 ```
 with <b>test</b> you can test an existing model with a batch of images and get the accuracy of the model.</br>
 ```
-python main.py --mode test --path /path/to/network/folder
+python main.py --mode test --path path/to/network/folder
 ```
 With <b>viewtest</b> you can view the images the model is computing, associated with the model answer and confidence relative to it.</br>
 ```
-python main.py --mode viewtest --path /path/to/network/folder
+python main.py --mode viewtest --path path/to/network/folder
 ```
 With <b>selftest</b> you can draw numbers yourself and feed them to the network, and see if it can recognize what they are!
 ```
-python main.py --mode selftest --path /path/to/network/folder
+python main.py --mode selftest --path path/to/network/folder
 ```
 
 Also, you can play around using the pre-trained model, you will need to set the --path to the folder "saved_network_98.5%", where the network is saved. <br />

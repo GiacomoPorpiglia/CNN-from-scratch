@@ -4,6 +4,7 @@ from Layers.Conv2D import Conv2D
 from Layers.Pool2D import Pool2D
 import matplotlib.pyplot as plt
 from combinationMaps import *
+from pathlib import Path
 
 class NeuralNetwork:
 
@@ -43,7 +44,7 @@ class NeuralNetwork:
 
         self.networkToLoadPath = networkToLoadPath
 
-        if self.networkToLoadPath != '\n':
+        if self.networkToLoadPath != "":
             self.load()
 
 
@@ -136,28 +137,37 @@ class NeuralNetwork:
 
 
     def load(self):
+        
+        path_to_folder = Path(self.networkToLoadPath)
+
         for idx, layer in enumerate(self.denseLayers):
             try:
-                layer.weights = np.load(self.networkToLoadPath + '/ff_weights' + str(idx+1) + '.npy')
-                layer.biases = np.load(self.networkToLoadPath + '/ff_biases' + str(idx+1) + '.npy')
-            except IOError:
+                layer.weights = np.load(path_to_folder / ('ff_weights' + str(idx+1) + '.npy'))
+
+                layer.biases  = np.load(path_to_folder / ('ff_biases'  + str(idx+1) + '.npy'))
+            except OSError:
+                print("Error in loading the Network's weights and/or biases.")
                 pass
 
         numOfPoolLayers = 0
         for idx, layer in enumerate(self.convLayers):
             if isinstance(layer, Conv2D):
                 try:
-                    layer.kernels = np.load(self.networkToLoadPath + '/conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy')
-                except IOError:
+                    layer.kernels = np.load(path_to_folder / ('conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy'))
+                except OSError:
+                    print("Error in loading the Network's conv layers.")
                     pass
             else:
                 numOfPoolLayers += 1
             
     def save(self):      
+
+        path_to_folder = Path(self.networkToLoadPath)
+
         for idx, layer in enumerate(self.denseLayers):
             try:
-                np.save(self.networkToLoadPath + '/ff_weights' + str(idx+1) + '.npy', layer.weights)
-                np.save(self.networkToLoadPath + '/ff_biases' + str(idx+1) + '.npy', layer.biases)
+                np.save(path_to_folder / ('ff_weights' + str(idx+1) + '.npy'), layer.weights)
+                np.save(path_to_folder / ('ff_biases'  + str(idx+1) + '.npy'), layer.biases)
             except IOError:
                 pass 
             
@@ -166,7 +176,7 @@ class NeuralNetwork:
             
             if isinstance(layer, Conv2D):
                 try:
-                    np.save(self.networkToLoadPath + '/conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy', layer.kernels)
+                    np.save(path_to_folder / ('conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy'), layer.kernels)
                 except IOError:
                     pass
             else:

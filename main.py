@@ -6,6 +6,8 @@ from loadSamples import *
 from randomizeImage import *
 from Settings.settings import *
 import argparse
+import os
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--mode', help="Required ...... Specify the mode: You can choose between train, test, selftest and viewtest.", required=True,action='store')
@@ -74,6 +76,11 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         print("No path was specified. Initializing a random, untrained network...")
     elif networkToLoadPath=="" and mode == "train":
         print("You must specify the path were you want the network to be saved. Try again.")
+        return
+    
+    network_file_path = Path(networkToLoadPath)
+    if not network_file_path.exists():
+        print("The specified path doesn't exist. Make sure you typed in the correct path.")
         return
     #--------------------Neural Network Loop--------------------------
 
