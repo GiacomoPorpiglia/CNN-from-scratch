@@ -146,7 +146,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             images_test_set, labels_test_set = selectImagesAndLabels(batch_size, image_size, testImages, testLabels)
             test(network, image_size, images_test_set, labels_test_set, 'test')
             print("Accuracy:", network.testRightAnswers/(batch_size) *100, "%")
-            print(network.testRightAnswers, network.testWrongAnswers)
+            print("Right answers: ", network.testRightAnswers, "  Wrong answers: ", network.testWrongAnswers)
             network.testRightAnswers = network.testWrongAnswers = 0
     elif mode == 'viewtest':
         testImages = loadImages('test', image_size)
