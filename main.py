@@ -73,11 +73,9 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     networkToLoadPath = args.path
 
     if networkToLoadPath=="":
-        print("No path was specified. Initializing a random, untrained network...")
-    elif networkToLoadPath=="" and mode == "train":
-        print("You must specify the path were you want the network to be saved. Try again.")
+        print("No path was specified. You must specify a path. Try again.")
         return
-    
+     
     network_file_path = Path(networkToLoadPath)
     if (not network_file_path.exists() and mode != "train"):
         print("The specified path doesn't exist. Make sure you typed in the correct path.")
