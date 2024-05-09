@@ -23,6 +23,7 @@ class NeuralNetwork:
 
         self.convSizes = convSizes
 
+        #the image is 28x28, and after the convolution layer the size is 28 - convSize + 1 
         outputSize = 28-convSizes[0][1]+1
         self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize)) #Options: SIGMOID / RELU 
         self.convLayers.append(Pool2D(convSizes[0][0], outputSize, "MEAN")) #Options: MEAN / MAX
@@ -49,49 +50,57 @@ class NeuralNetwork:
 
 
     def calculateOutputs(self, inputs):
-        finalOutput = inputs.reshape(1, 28, 28)
+        #reshape the inputs to a matrix, since the first layer is a conv layer
+        forwardedInputs = inputs.reshape(1, 28, 28)
+        #forward the outputs of the previous conv layer to the next
         for convLayer in self.convLayers:
-            finalOutput = convLayer.forward(finalOutput)
+            forwardedInputs = convLayer.forward(forwardedInputs)
         
-        finalOutput = finalOutput.reshape(self.denseLayers[0].n_inputs)
 
+        #reshape conv layer outputs to linear layer dense inputs
+        forwardedInputs = forwardedInputs.reshape(self.denseLayers[0].n_inputs)
+
+        #forward the outputs of the previous dense layer to the next
         for layer in self.denseLayers:
-            finalOutput = layer.forward(finalOutput)
-        return finalOutput
+            forwardedInputs = layer.forward(forwardedInputs)
+        return forwardedInputs
 
-
+    #given the network outputs and the expected outputs, calculate the cost function
     def cost(self, outputs, expected_output):
         cost = 0
         for idx, outputVal in enumerate(outputs):
             cost += self.nodeCost(outputVal, expected_output[idx])
         return cost
 
-
+    #calculate the cost for an output node using cross-entropy loss
     def nodeCost(self, pred_y, correct_y):
         return -correct_y*np.log(pred_y+1e-8)
 
 
     def updateAllGradients(self, data, expected_output):
-
+        #run the network for a single image (data)
         outputs = self.calculateOutputs(data)
         if(np.argmax(outputs) == np.argmax(expected_output)):
             self.rightAnswers+=1
         else:
             self.wrongAnswers+=1
-              
+        
         self.costSum += self.cost(outputs, expected_output)
         outputLayer = self.denseLayers[-1]
+
+        #update gradients of the network
+
         nodeValues = outputLayer.calculateOutputLayerNodeValues(expected_output)
         
         outputLayer.updateGradients()
 
-
+        #Layer dense backpropagation (update gradients)
         for hiddenLayer_idx in reversed(range(len(self.denseLayers)-1)):
             hiddenLayer = self.denseLayers[hiddenLayer_idx]
             nodeValues = hiddenLayer.calculateHiddenLayerNodeValues(self.denseLayers[hiddenLayer_idx+1], nodeValues)
             hiddenLayer.updateGradients()
 
-        #CNN backpropagation
+        #Conv backpropagation (update gradients)
         inputFCLayerNodeValues = np.dot((self.denseLayers[0].weights), self.denseLayers[0].nodeValues)
         nodeValues = self.convLayers[-1].updateGradients(inputFCLayerNodeValues)
         for idx in range(len(self.convLayers)-2, -1, -1):
@@ -105,6 +114,8 @@ class NeuralNetwork:
         #store and print the train accuracy and cost of the learning data to see if the network is improving     
         #-----------------Apply and reset the gradients--------------------
 
+        #each layer will now have its gradients calculated
+        #now we apply and reset them
         for layer in self.denseLayers:
             layer.applyGradients(learnRate)
             layer.resetGradients()
@@ -140,13 +151,21 @@ class NeuralNetwork:
         
         path_to_folder = Path(self.networkToLoadPath)
 
+        #if the folder doesn't exist, create it
+        if not path_to_folder.exists():
+            print("Path not found. Initializing an empty folder at the specified path...")
+            path_to_folder.mkdir(parents=True, exist_ok=True)
+            return
+
+        print("Path found. Loading the existing network...")
+
         for idx, layer in enumerate(self.denseLayers):
             try:
                 layer.weights = np.load(path_to_folder / ('ff_weights' + str(idx+1) + '.npy'))
 
                 layer.biases  = np.load(path_to_folder / ('ff_biases'  + str(idx+1) + '.npy'))
             except OSError:
-                print("Error in loading the Network's weights and/or biases.")
+                print("- Error in loading the Network's weights and/or biases at the specified path. Please ignore the error if you want to initialize a new network on the specified path.")
                 pass
 
         numOfPoolLayers = 0
@@ -155,7 +174,7 @@ class NeuralNetwork:
                 try:
                     layer.kernels = np.load(path_to_folder / ('conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy'))
                 except OSError:
-                    print("Error in loading the Network's conv layers.")
+                    print("- Error in loading the Network's conv layers. Please ignore the error if you want to initialize a new network on the specified path.")
                     pass
             else:
                 numOfPoolLayers += 1
@@ -169,6 +188,7 @@ class NeuralNetwork:
                 np.save(path_to_folder / ('ff_weights' + str(idx+1) + '.npy'), layer.weights)
                 np.save(path_to_folder / ('ff_biases'  + str(idx+1) + '.npy'), layer.biases)
             except IOError:
+                print("Error in saving the network")
                 pass 
             
         numOfPoolLayers = 0
@@ -178,6 +198,7 @@ class NeuralNetwork:
                 try:
                     np.save(path_to_folder / ('conv_kernels' + str(idx+1-numOfPoolLayers) + '.npy'), layer.kernels)
                 except IOError:
+                    print("Error in saving the network")
                     pass
             else:
                 numOfPoolLayers += 1

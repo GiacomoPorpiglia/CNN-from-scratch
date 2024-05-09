@@ -22,7 +22,7 @@ class LayerDense:
         self.costGradientWHistory = np.zeros((n_inputs, n_neurons))
         self.costGradientBHistory = np.zeros(n_neurons)
 
-        self.nodeValues = np.zeros(self.n_neurons)
+        self.nodeValues = np.zeros(self.n_neurons) # nodeValues are the values of partial derivatives (backpropagation) used to update the gradients
         self.inputs = np.zeros(self.n_inputs)
         self.weightedInputs = np.zeros(self.n_neurons)
 

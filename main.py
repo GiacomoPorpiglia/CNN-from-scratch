@@ -72,14 +72,14 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     
     networkToLoadPath = args.path
 
-    if networkToLoadPath=="" and mode != "train":
+    if networkToLoadPath=="":
         print("No path was specified. Initializing a random, untrained network...")
     elif networkToLoadPath=="" and mode == "train":
         print("You must specify the path were you want the network to be saved. Try again.")
         return
     
     network_file_path = Path(networkToLoadPath)
-    if not network_file_path.exists():
+    if (not network_file_path.exists() and mode != "train"):
         print("The specified path doesn't exist. Make sure you typed in the correct path.")
         return
     #--------------------Neural Network Loop--------------------------
@@ -109,7 +109,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
-            if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
+            if epochProgress-int(epochProgress) + batch_size/60000 >= 0.1:
                 print(f"\nEpoch {int(currentEpoch)+1} completed")
                 currentEpoch+=1
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
