@@ -3,7 +3,7 @@ from scipy.ndimage import zoom
 import random
 import numpy as np
 
-
+#rotate by random angle between -10 and 10 degrees
 def rotate_image(image):
     image = rotate(image, angle=random.randint(-10, 10), reshape=False)
     return image
