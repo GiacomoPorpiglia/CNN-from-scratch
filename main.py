@@ -107,15 +107,15 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
-            if epochProgress-int(epochProgress) + batch_size/60000 >= 0.1:
+            if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
                 print(f"\nEpoch {int(currentEpoch)+1} completed")
                 currentEpoch+=1
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
                 trainAccuracy = round((network.rightAnswers/(network.rightAnswers+network.wrongAnswers))*100, 3)
-                testAccuracy = round((network.testRightAnswers/test_batch_size)*100, 3)
-                costAverage = round((network.costSum/(network.rightAnswers+network.wrongAnswers)), 3)
+                testAccuracy  = round((network.testRightAnswers/test_batch_size)*100, 3)
+                costAverage   = round((network.costSum/(network.rightAnswers+network.wrongAnswers)), 3)
                 #WRITE THE TRAINING DATA TO FILE
                 try:
                     with open(networkToLoadPath + '/testData.txt', 'a') as f:
