@@ -17,8 +17,10 @@ class NeuralNetwork:
         self.layerSizes = layerSizes
         for idx in range(len(layerSizes)-1):
             if idx+1 == len(layerSizes)-1:
+                #output layer
                 self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SOFTMAX")) #Options: SOFTMAX
             else:
+                #hidden layers
                 self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SIGMOID")) #Options: SIGMOID / RELU 
 
         self.convSizes = convSizes
