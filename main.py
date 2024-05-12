@@ -10,8 +10,8 @@ import os
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--mode', help="Required ...... Specify the mode: You can choose between train, test, selftest and viewtest.", required=True,action='store')
-parser.add_argument('--path', help="Required ...... Specify the path you want to load an existing network from, or in case of train where you want the new network to be stored.", required=True, action='store')
+parser.add_argument('--mode',   help="Required ...... Specify the mode: You can choose between train, test, selftest and viewtest.", required=True,action='store')
+parser.add_argument('--path',   help="Required ...... Specify the path you want to load an existing network from, or in case of train where you want the new network to be stored.", required=True, action='store')
 parser.add_argument('--epochs', help="Optional ...... Default set to 20, specifies the number of epochs you want to train the model for.", action='store')
 args = parser.parse_args()
 
@@ -32,12 +32,13 @@ def train(network, image_size, images_set, labels_set, counter, mode, learnRate)
     #add noise and normalize the values, so pass from a range [0, 255] to [0, 1]
     for image_idx, image in enumerate(images_set):
         images_set[image_idx] = clear_and_normalize(images_set[image_idx])
-        #images_set[image_idx] = add_noise(images_set[image_idx])
+
     images_set = images_set.reshape(batch_size, image_size, image_size)
 
     #run the data through the network
     network.run(mode, images_set, labels_set, learnRate)
    
+
 def test(network, image_size, images_set, labels_set, mode):
     print("Running test...")
     batch_size = images_set.shape[0]
@@ -49,6 +50,7 @@ def test(network, image_size, images_set, labels_set, mode):
 
     #run the image through the network  
     network.run(mode, images_set, labels_set)
+
 
 def viewtest(network, image_size, images_set, labels_set, mode):
     batch_size = 1
@@ -80,6 +82,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     if (not network_file_path.exists() and mode != "train"):
         print("The specified path doesn't exist. Make sure you typed in the correct path.")
         return
+    
     #--------------------Neural Network Loop--------------------------
 
     network = NeuralNetwork(LDNSize, CNNSize, networkToLoadPath)
@@ -90,7 +93,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         trainImages = loadImages('train', image_size)
         trainLabels = loadLabels('train')
 
-        test_batch_size = 10000
+        test_batch_size = num_of_images_in_train_set
         testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
         maxAccuracy = 0
@@ -98,8 +101,9 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         maxEpochs = 20 if args.epochs is None else int(args.epochs)
         currentEpoch = 0
         while currentEpoch < maxEpochs:
-            batchCounter+=1
-            epochProgress = batchCounter*batch_size/60000
+
+            batchCounter += 1
+            epochProgress = batchCounter * batch_size / num_of_images_in_train_set
 
             print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 2):.2f}%", end="\r")
 
@@ -107,9 +111,9 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
             
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
-            if epochProgress-int(epochProgress) + batch_size/60000 >= 1:
+            if epochProgress-int(epochProgress) + batch_size/num_of_images_in_train_set >= 1:
                 print(f"\nEpoch {int(currentEpoch)+1} completed")
-                currentEpoch+=1
+                currentEpoch += 1
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
@@ -139,11 +143,11 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
     elif mode == 'test':
         testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
-        batch_size = 10000
+        batch_size = num_of_images_in_test_set
         while True:
             images_test_set, labels_test_set = selectImagesAndLabels(batch_size, image_size, testImages, testLabels)
             test(network, image_size, images_test_set, labels_test_set, 'test')
-            print("Accuracy:", network.testRightAnswers/(batch_size) *100, "%")
+            print("Accuracy:", network.testRightAnswers / batch_size * 100, "%")
             print("Right answers: ", network.testRightAnswers, "  Wrong answers: ", network.testWrongAnswers)
             network.testRightAnswers = network.testWrongAnswers = 0
     elif mode == 'viewtest':
