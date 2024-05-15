@@ -15,6 +15,9 @@ LeNet is made of:
   * an output layer with 10 outputs, one for each digit  
 
 The **activation function** is **sigmoid**, and for the output layer is **Softmax**, paired with **cross-entropy loss**.  
+<br/>
+You can change these activations functions in the settings.py file, but of course, if you then run my pre-trained network using different activation functions, it won't be accurate, since it was trained to use the activation functions specified by default on settings.py .
+So, I suggest to change them only if you will to train your own network with them.
 
 The only difference with the original LeNet is the number of inputs for the FC layers: in fact, since the size of each image was originally 32x32, the flattened output of C4 had size=16x5x5=400. No other changes were made from the original model.
 

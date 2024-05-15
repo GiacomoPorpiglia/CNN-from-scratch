@@ -5,6 +5,7 @@ from Layers.Pool2D import Pool2D
 import matplotlib.pyplot as plt
 from combinationMaps import *
 from pathlib import Path
+from Settings.settings import *
 
 class NeuralNetwork:
 
@@ -18,21 +19,21 @@ class NeuralNetwork:
         for idx in range(len(layerSizes)-1):
             if idx+1 == len(layerSizes)-1:
                 #output layer
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SOFTMAX")) #Options: SOFTMAX
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], acitvation_function_output_layer)) #Options: SOFTMAX
             else:
                 #hidden layers
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], "SIGMOID")) #Options: SIGMOID / RELU 
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], activation_function_layer_dense)) #Options: SIGMOID / RELU 
 
         self.convSizes = convSizes
 
         #the image is 28x28, and after the convolution layer the size is 28 - convSize + 1 
         outputSize = 28-convSizes[0][1]+1
-        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, "SIGMOID", outputSize)) #Options: SIGMOID / RELU 
-        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, "MEAN")) #Options: MEAN / MAX
+        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, activation_function_conv_layer, outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, activation_function_pool_layer)) #Options: MEAN / MAX
 
         outputSize = int(outputSize/2 -convSizes[1][1] + 1)
-        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, "SIGMOID", outputSize)) #Options: SIGMOID / RELU 
-        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, "MEAN")) #Options: MEAN / MAX
+        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, activation_function_conv_layer, outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, activation_function_pool_layer)) #Options: MEAN / MAX
 
         self.costSum = 0
         self.rightAnswers = 0
