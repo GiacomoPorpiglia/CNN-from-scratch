@@ -69,9 +69,9 @@ class LayerDense:
                 sum = 0
                 for j in range(self.output.shape[0]):
                     if nodeValueIdx == j:
-                        sum -= (1-self.output[nodeValueIdx])*(expected_output[nodeValueIdx])
+                        sum -= (1-self.output[nodeValueIdx]) * (expected_output[nodeValueIdx])
                     else:
-                        sum -= -self.output[nodeValueIdx] *(expected_output[j])
+                        sum -= -self.output[nodeValueIdx] * (expected_output[j])
                 self.nodeValues[nodeValueIdx] = sum
         
         return self.nodeValues
