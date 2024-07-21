@@ -15,32 +15,26 @@ class NeuralNetwork:
         self.denseLayers = []
         self.convLayers = []
 
-        softmax = Activations.Softmax()
-        relu    = Activations.Relu()
-        sigmoid = Activations.Sigmoid()
-        mean    = Activations.Mean()
-        max     = Activations.Max()
-
         self.networkToLoadPath = networkToLoadPath
         self.layerSizes = layerSizes
         for idx in range(len(layerSizes)-1):
             if idx+1 == len(layerSizes)-1:
                 #output layer
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], softmax)) #Options: SOFTMAX
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], acitvation_function_output_layer)) #Options: SOFTMAX
             else:
                 #hidden layers
-                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], sigmoid)) #Options: SIGMOID / RELU 
+                self.denseLayers.append(LayerDense(layerSizes[idx], layerSizes[idx+1], activation_function_layer_dense)) #Options: SIGMOID / RELU 
 
         self.convSizes = convSizes
 
         #the image is 28x28, and after the convolution layer the size is 28 - convSize + 1 
         outputSize = 28-convSizes[0][1]+1
-        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, sigmoid, outputSize)) #Options: SIGMOID / RELU 
-        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, mean)) #Options: MEAN / MAX
+        self.convLayers.append(Conv2D(convSizes[0][0], convSizes[0][1], combinationMap0, activation_function_conv_layer, outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[0][0], outputSize, activation_function_pool_layer)) #Options: MEAN / MAX
 
         outputSize = int(outputSize/2 -convSizes[1][1] + 1)
-        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, sigmoid, outputSize)) #Options: SIGMOID / RELU 
-        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, mean)) #Options: MEAN / MAX
+        self.convLayers.append(Conv2D(convSizes[1][0], convSizes[1][1], combinationMap1, activation_function_conv_layer, outputSize)) #Options: SIGMOID / RELU 
+        self.convLayers.append(Pool2D(convSizes[1][0], outputSize, activation_function_pool_layer)) #Options: MEAN / MAX
 
         self.costSum = 0
         self.rightAnswers = 0
