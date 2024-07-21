@@ -1,12 +1,12 @@
 import numpy as np
 from scipy import signal
-from Activations import activations
+from Activations.activations import *
 from Settings.settings import optimizer
 
 #This file contains the class for the convolutional layer
 
 class Conv2D:
-    def __init__(self, kernelNumber, kernelSize, combinations, activation, outputSize):
+    def __init__(self, kernelNumber, kernelSize, combinations, activation: Activations, outputSize):
         self.kernelNumber = kernelNumber
         self.kernelSize = kernelSize
         self.kernels = self.initializeKernels(kernelNumber, kernelSize)
@@ -42,22 +42,15 @@ class Conv2D:
                 inputSum -= inputs[input_idx]             
             self.outputs[idx_k] += signal.correlate2d(inputSum, kernel, "valid")
 
-
-        if self.activation == "RELU":
-            self.outputs = activations.relu(self.outputs)
-        elif self.activation == "SIGMOID":
-            self.outputs = activations.sigmoid(self.outputs)
-        return self.outputs
+        self.outputs = self.activation.forward(self.outputs) #pass the outputs in the activation function
+        return self.outputs                                  # and then return
 
 
     #function to update the gradients f the layer based on gradient descent
     def updateGradients(self, nodeValues):
         nodeValues = nodeValues.reshape(self.kernelNumber, self.outputs.shape[1], self.outputs.shape[2])
 
-        if self.activation == "SIGMOID":
-            activationDerivatives = np.copy(activations.sigmoid_derivative(self.outputs))
-        elif self.activation == "RELU":
-            activationDerivatives = np.copy(activations.relu_derivative(self.outputs))
+        activationDerivatives = np.copy(self.activation.derivative(self.outputs))
 
         nodeValuesWithActDerivative = nodeValues * activationDerivatives
 

@@ -1,12 +1,12 @@
 import numpy as np
 from math import sqrt
-from Activations import activations
+from Activations.activations import *
 from Settings.settings import optimizer
 
 #This file contains the LayerDense class, which describes a layer of neurons 
 
 class LayerDense:
-    def __init__(self, n_inputs, n_neurons, activation):
+    def __init__(self, n_inputs, n_neurons, activation: Activations):
         self.n_inputs = n_inputs
         self.n_neurons = n_neurons
         self.weights = 0.5*np.random.randn(n_inputs, n_neurons)
@@ -63,6 +63,7 @@ class LayerDense:
 
     #this function calculates the node values for the output layer
     def calculateOutputLayerNodeValues(self, expected_output):
+        
         #calculates the node values for the output layer (with softmax and cross entropy) 
         if self.activation == "SOFTMAX":
             for nodeValueIdx in range(len(self.nodeValues)):
@@ -81,10 +82,7 @@ class LayerDense:
     #First, it calculates the activation function derivatives, and then it  uses them to caluclate the node values, based on the backpropagation method
     def calculateHiddenLayerNodeValues(self, oldLayer, oldNodeValues):
 
-        if self.activation == "SIGMOID":
-            activationDerivatives = np.copy(activations.sigmoid_derivative(self.output))  
-        elif self.activation == "RELU":
-            activationDerivatives = np.copy(activations.relu_derivative(self.output))
+        activationDerivatives = np.copy(self.activation.derivative(self.output))  
 
         self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
         return self.nodeValues
@@ -99,10 +97,6 @@ class LayerDense:
         self.weightedInputs = self.biases + np.dot(inputs, self.weights)
 
         #pass the weighted input into activation function to get output values
-        if self.activation == "SIGMOID":
-            self.output = activations.sigmoid(self.weightedInputs)
-        elif self.activation == "RELU":
-            self.output = activations.relu(self.weightedInputs)
-        elif self.activation == "SOFTMAX":
-            self.output = activations.softmax(self.weightedInputs)
+        self.output = self.activation.forward(self.weightedInputs)
+
         return self.output
