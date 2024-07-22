@@ -50,7 +50,7 @@ class Conv2D:
     def updateGradients(self, nodeValues):
         nodeValues = nodeValues.reshape(self.kernelNumber, self.outputs.shape[1], self.outputs.shape[2])
 
-        activationDerivatives = np.copy(self.activation.derivative(self.outputs))
+        activationDerivatives = self.activation.derivative(self.outputs)
 
         nodeValuesWithActDerivative = nodeValues * activationDerivatives
 

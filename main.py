@@ -93,7 +93,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
         trainImages = loadImages('train', image_size)
         trainLabels = loadLabels('train')
 
-        test_batch_size = num_of_images_in_train_set
+        test_batch_size = num_of_images_in_test_set
         testImages = loadImages('test', image_size)
         testLabels = loadLabels('test')
         maxAccuracy = 0
@@ -134,7 +134,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
                 if testAccuracy > maxAccuracy:
                     maxAccuracy = testAccuracy
                     network.save()
-                    print(f"Network saved at epoch {int(epochProgress)+1} with test accuracy: {testAccuracy}")
+                    print(f"Network saved at epoch {int(epochProgress)+1} with test accuracy: {testAccuracy} %")
                 else:
                     print("\n")
                 

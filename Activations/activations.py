@@ -27,6 +27,18 @@ class Activations:
             expsum = np.sum(np.exp(input-max))
             return np.exp(input-max) / expsum
         
+        def nodeValuesWithCrossEntropy(self, expected_output, output):
+            nodeValues = np.empty_like(output)
+            for nodeValueIdx in range(len(nodeValues)):
+                sum = 0
+                for j in range(output.shape[0]):
+                    if nodeValueIdx == j:
+                        sum -= (1-output[nodeValueIdx]) * (expected_output[nodeValueIdx])
+                    else:
+                        sum -= -output[nodeValueIdx] * (expected_output[j])
+                nodeValues[nodeValueIdx] = sum
+            return nodeValues
+
 
     class Mean:
         def forward(self, input):

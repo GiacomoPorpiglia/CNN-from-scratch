@@ -31,7 +31,7 @@ class LayerDense:
         #FOR ADAM
         self.numIterations = 0
 
-    #This function initializes the weights of the layer, according to He weight initialization based on Gaussin distribution
+    #This function initializes the weights of the layer, according to He weight initialization based on Gaussian distribution
     def initializeWeights(self):
         #He weight initialization
         std = sqrt(2 / self.n_inputs)
@@ -65,16 +65,7 @@ class LayerDense:
     def calculateOutputLayerNodeValues(self, expected_output):
         
         #calculates the node values for the output layer (with softmax and cross entropy) 
-        if self.activation == "SOFTMAX":
-            for nodeValueIdx in range(len(self.nodeValues)):
-                sum = 0
-                for j in range(self.output.shape[0]):
-                    if nodeValueIdx == j:
-                        sum -= (1-self.output[nodeValueIdx]) * (expected_output[nodeValueIdx])
-                    else:
-                        sum -= -self.output[nodeValueIdx] * (expected_output[j])
-                self.nodeValues[nodeValueIdx] = sum
-        
+        self.nodeValues = self.activation.nodeValuesWithCrossEntropy(expected_output, self.output)
         return self.nodeValues
 
 
@@ -82,7 +73,7 @@ class LayerDense:
     #First, it calculates the activation function derivatives, and then it  uses them to caluclate the node values, based on the backpropagation method
     def calculateHiddenLayerNodeValues(self, oldLayer, oldNodeValues):
 
-        activationDerivatives = np.copy(self.activation.derivative(self.output))  
+        activationDerivatives = self.activation.derivative(self.output)
 
         self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
         return self.nodeValues
@@ -90,8 +81,7 @@ class LayerDense:
 
     #this function calculates the output of the layer, by taking the inputs from the previous layer
     def forward(self, inputs):
-        self.inputs = inputs
-        self.weightedInputs = np.zeros(self.n_neurons)
+        self.inputs = np.copy(inputs)
 
         #calculate the weighted inputs with dot product
         self.weightedInputs = self.biases + np.dot(inputs, self.weights)
