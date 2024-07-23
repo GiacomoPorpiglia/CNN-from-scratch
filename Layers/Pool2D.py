@@ -11,7 +11,6 @@ class Pool2D:
     def forward(self, input):
         self.input = np.copy(input)
         output = self.activation.forward(input)
-        self.output = np.copy(output)
         return output
 
     def updateGradients(self, nodeValues):
