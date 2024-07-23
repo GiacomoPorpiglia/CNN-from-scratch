@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from combinationMaps import *
 from pathlib import Path
 from Settings.settings import *
+from Activations.activations import *
 
 class NeuralNetwork:
 

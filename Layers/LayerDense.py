@@ -1,12 +1,12 @@
 import numpy as np
 from math import sqrt
-from Activations import activations
+from Activations.activations import *
 from Settings.settings import optimizer
 
 #This file contains the LayerDense class, which describes a layer of neurons 
 
 class LayerDense:
-    def __init__(self, n_inputs, n_neurons, activation):
+    def __init__(self, n_inputs, n_neurons, activation: Activations):
         self.n_inputs = n_inputs
         self.n_neurons = n_neurons
         self.weights = 0.5*np.random.randn(n_inputs, n_neurons)
@@ -31,7 +31,7 @@ class LayerDense:
         #FOR ADAM
         self.numIterations = 0
 
-    #This function initializes the weights of the layer, according to He weight initialization based on Gaussin distribution
+    #This function initializes the weights of the layer, according to He weight initialization based on Gaussian distribution
     def initializeWeights(self):
         #He weight initialization
         std = sqrt(2 / self.n_inputs)
@@ -63,17 +63,9 @@ class LayerDense:
 
     #this function calculates the node values for the output layer
     def calculateOutputLayerNodeValues(self, expected_output):
-        #calculates the node values for the output layer (with softmax and cross entropy) 
-        if self.activation == "SOFTMAX":
-            for nodeValueIdx in range(len(self.nodeValues)):
-                sum = 0
-                for j in range(self.output.shape[0]):
-                    if nodeValueIdx == j:
-                        sum -= (1-self.output[nodeValueIdx]) * (expected_output[nodeValueIdx])
-                    else:
-                        sum -= -self.output[nodeValueIdx] * (expected_output[j])
-                self.nodeValues[nodeValueIdx] = sum
         
+        #calculates the node values for the output layer (with softmax and cross entropy) 
+        self.nodeValues = self.activation.nodeValuesWithCrossEntropy(expected_output, self.output)
         return self.nodeValues
 
 
@@ -81,10 +73,7 @@ class LayerDense:
     #First, it calculates the activation function derivatives, and then it  uses them to caluclate the node values, based on the backpropagation method
     def calculateHiddenLayerNodeValues(self, oldLayer, oldNodeValues):
 
-        if self.activation == "SIGMOID":
-            activationDerivatives = np.copy(activations.sigmoid_derivative(self.output))  
-        elif self.activation == "RELU":
-            activationDerivatives = np.copy(activations.relu_derivative(self.output))
+        activationDerivatives = self.activation.derivative(self.output)
 
         self.nodeValues = np.dot((oldLayer.weights), oldNodeValues) * activationDerivatives
         return self.nodeValues
@@ -92,17 +81,12 @@ class LayerDense:
 
     #this function calculates the output of the layer, by taking the inputs from the previous layer
     def forward(self, inputs):
-        self.inputs = inputs
-        self.weightedInputs = np.zeros(self.n_neurons)
+        self.inputs = np.copy(inputs)
 
         #calculate the weighted inputs with dot product
         self.weightedInputs = self.biases + np.dot(inputs, self.weights)
 
         #pass the weighted input into activation function to get output values
-        if self.activation == "SIGMOID":
-            self.output = activations.sigmoid(self.weightedInputs)
-        elif self.activation == "RELU":
-            self.output = activations.relu(self.weightedInputs)
-        elif self.activation == "SOFTMAX":
-            self.output = activations.softmax(self.weightedInputs)
+        self.output = self.activation.forward(self.weightedInputs)
+
         return self.output
