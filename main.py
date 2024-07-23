@@ -105,7 +105,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             batchCounter += 1
             epochProgress = batchCounter * batch_size / num_of_images_in_train_set
 
-            print(f"Epoch number {int(epochProgress)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 2):.2f}%", end="\r")
+            print(f"Epoch number {int(currentEpoch)+1}, Progress: {round((epochProgress-int(epochProgress))*100, 2):.2f}%", end="\r")
 
             images_train_set, labels_train_set = selectImagesAndLabels(batch_size, image_size, trainImages, trainLabels)
             train(network, image_size, images_train_set, labels_train_set, batchCounter, 'train', learnRate)
@@ -113,7 +113,6 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
             #every epoch, run test and get results, and write train, test accuracy and cost average to file
             if epochProgress-int(epochProgress) + batch_size/num_of_images_in_train_set >= 1:
                 print(f"\nEpoch {int(currentEpoch)+1} completed")
-                currentEpoch += 1
                 images_test_set, labels_test_set = selectImagesAndLabels(test_batch_size, image_size, testImages, testLabels)
                 test(network, image_size, images_test_set, labels_test_set, 'test')
 
@@ -137,6 +136,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
                     print(f"Network saved at epoch {int(epochProgress)+1} with test accuracy: {testAccuracy} %")
                 else:
                     print("\n")
+                currentEpoch += 1
                 
 
 
