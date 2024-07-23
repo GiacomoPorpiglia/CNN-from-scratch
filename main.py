@@ -133,7 +133,7 @@ def main(learnRate, batch_size, LDNSize, CNNSize):
                 if testAccuracy > maxAccuracy:
                     maxAccuracy = testAccuracy
                     network.save()
-                    print(f"Network saved at epoch {int(epochProgress)+1} with test accuracy: {testAccuracy} %")
+                    print(f"Network saved at epoch {currentEpoch+1} with test accuracy: {testAccuracy} %")
                 else:
                     print("\n")
                 currentEpoch += 1
