@@ -8,7 +8,7 @@ class Momentum:
         self.w_change = wGradients*learnRate + self.w_change*self.momentum
         self.b_change = bGradients*learnRate + self.b_change*self.momentum
         
-        return self.weightsChange, self.biasesChange
+        return self.w_change, self.b_change
         
 
     def optimizeConv(self, kGradients, learnRate):
