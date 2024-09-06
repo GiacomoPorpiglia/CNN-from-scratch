@@ -9,18 +9,16 @@ class LayerDense:
     def __init__(self, n_inputs, n_neurons, activation: Activations):
         self.n_inputs = n_inputs
         self.n_neurons = n_neurons
-        self.weights = 0.5*np.random.randn(n_inputs, n_neurons)
-        self.biases = 0.5*np.random.randn(n_neurons)
+        #this is a possible
+        self.weights = self.initializeWeights()
+        self.biases = np.zeros(n_neurons)
 
         self.activation = activation
 
         self.output = np.zeros(self.n_neurons)
 
-        self.costGradientW = self.initializeWeights()
+        self.costGradientW = np.zeros((n_inputs, n_neurons))
         self.costGradientB = np.zeros(n_neurons)
-
-        self.costGradientWHistory = np.zeros((n_inputs, n_neurons))
-        self.costGradientBHistory = np.zeros(n_neurons)
 
         self.nodeValues = np.zeros(self.n_neurons) # nodeValues are the values of partial derivatives (backpropagation) used to update the gradients
         self.inputs = np.zeros(self.n_inputs)
